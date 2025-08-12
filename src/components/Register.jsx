@@ -39,7 +39,7 @@ const Register = ({ setModalType }) => {
         <div className="relative px-4 py-10 bg-white mx-8 md:mx-0 shadow rounded-3xl sm:p-10 border">
           <div className="max-w-md mx-auto">
             <div className="flex items-center space-x-5 justify-center">
-              <h1 className="text-2xl">Sign Up</h1>
+              <h1 className="text-2xl">Register !</h1>
             </div>
             <div className="mt-5">
               <label className="font-semibold text-sm text-gray-600 pb-1 block">

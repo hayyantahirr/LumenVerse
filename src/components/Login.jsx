@@ -8,7 +8,7 @@ const Login = ({ setModalType }) => {
   const password = useRef();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
-  const signInUser = (e) => {
+  const LogInUser = (e) => {
     e.preventDefault();
     console.log(email.current.value, password.current.value);
     // Sign in existing User Through Firebase
@@ -39,12 +39,12 @@ const Login = ({ setModalType }) => {
     <>
       <form
         className="relative py-3 sm:max-w-xl sm:mx-auto "
-        onSubmit={signInUser}
+        onSubmit={LogInUser}
       >
         <div className="relative px-4 py-10 bg-white mx-8 md:mx-0 shadow rounded-3xl sm:p-10 border">
           <div className="max-w-md mx-auto">
             <div className="flex items-center space-x-5 justify-center">
-              <h1 className="text-2xl">Sign In</h1>
+              <h1 className="text-2xl">Log In</h1>
             </div>
             <div className="mt-5">
               <label className="font-semibold text-sm text-gray-600 pb-1 block">
