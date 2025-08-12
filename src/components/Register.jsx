@@ -1,6 +1,7 @@
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router";
+import { auth } from "../config/Firebase/firebase";
 
 const Register = ({ setModalType }) => {
   const email = useRef();
@@ -29,6 +30,10 @@ const Register = ({ setModalType }) => {
       console.error("Error during registration:", error.message);
     }
   };
+
+  //   Creating facebook User
+
+  // Creating Google User
 
   return (
     <>
@@ -122,6 +127,7 @@ const Register = ({ setModalType }) => {
 
             <div className="flex justify-center w-full items-center">
               <div>
+                {/* Sign in with google  */}
                 <button className="flex items-center justify-center py-2 px-20 bg-white hover:bg-gray-200 focus:ring-blue-500 focus:ring-offset-blue-200 text-gray-700 w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg">
                   <svg
                     viewBox="0 0 24 24"
@@ -190,40 +196,6 @@ const Register = ({ setModalType }) => {
                     ></path>
                   </svg>
                   <span className="ml-2">Sign in with Google</span>
-                </button>
-                <button className="flex items-center justify-center py-2 px-20 bg-white hover:bg-gray-200 focus:ring-blue-500 focus:ring-offset-blue-200 text-gray-700 w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg mt-4">
-                  <svg
-                    xmlnsXlink="http://www.w3.org/1999/xlink32"
-                    xmlns="http://www.w3.org/2000/svg"
-                    version="1.1"
-                    viewBox="0 0 64 64"
-                    height="32px"
-                    width="24px"
-                  >
-                    <g
-                      fillRule="evenodd"
-                      fill="none"
-                      strokeWidth="1"
-                      stroke="none"
-                    >
-                      <g
-                        fillRule="nonzero"
-                        transform="translate(3.000000, 3.000000)"
-                      >
-                        <circle
-                          r="29.4882047"
-                          cy="29.4927506"
-                          cx="29.5091719"
-                          fill="#3C5A9A"
-                        ></circle>
-                        <path
-                          fill="#FFFFFF"
-                          d="M39.0974944,9.05587273 L32.5651312,9.05587273 C28.6886088,9.05587273 24.3768224,10.6862851 24.3768224,16.3054653 C24.395747,18.2634019 24.3768224,20.1385313 24.3768224,22.2488655 L19.8922122,22.2488655 L19.8922122,29.3852113 L24.5156022,29.3852113 L24.5156022,49.9295284 L33.0113092,49.9295284 L33.0113092,29.2496356 L38.6187742,29.2496356 L39.1261316,22.2288395 L32.8649196,22.2288395 C32.8649196,22.2288395 32.8789377,19.1056932 32.8649196,18.1987181 C32.8649196,15.9781412 35.1755132,16.1053059 35.3144932,16.1053059 C36.4140178,16.1053059 38.5518876,16.1085101 39.1006986,16.1053059 L39.1006986,9.05587273 L39.0974944,9.05587273 L39.0974944,9.05587273 Z"
-                        ></path>
-                      </g>
-                    </g>
-                  </svg>
-                  <span className="ml-2">Sign in with Facebook</span>
                 </button>
               </div>
             </div>
