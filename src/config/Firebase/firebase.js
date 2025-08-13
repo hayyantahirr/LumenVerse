@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { GoogleAuthProvider } from "firebase/auth/web-extension";
+import { GoogleAuthProvider } from "firebase/auth";
 const firebaseConfig = {
   apiKey: "AIzaSyCHXE96Te7gYyjoSAb94wXpYR2EjjiQsWY",
   authDomain: "lumenverse-c8a01.firebaseapp.com",
@@ -12,6 +12,5 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const googleProvider = new GoogleAuthProvider();
-export { auth , googleProvider };
+export const auth = getAuth(app);
+export const googleProvider = new GoogleAuthProvider();

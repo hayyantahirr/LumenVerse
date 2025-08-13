@@ -68,6 +68,7 @@ const Home = () => {
     <>
       <div>
         <button onClick={() => setModalType("login")}>Sign In</button>
+        <button onClick={logout}>Log Out</button>
       </div>
 
       {/* Modal Overlay */}

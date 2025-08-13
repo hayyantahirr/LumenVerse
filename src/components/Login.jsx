@@ -2,7 +2,7 @@ import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import { auth, googleProvider } from "../config/Firebase/firebase";
-import { GoogleAuthProvider } from "firebase/auth/web-extension";
+import { GoogleAuthProvider } from "firebase/auth";
 
 const Login = ({ setModalType }) => {
   // Authentication States and ref
@@ -38,126 +38,121 @@ const Login = ({ setModalType }) => {
   };
 
   //   Sign in with Google
-   function google(params) {
-    signInWithPopup(auth, googleProvider)
-      .then((result) => {
-        // This gives you a Google Access Token. You can use it to access the Google API.
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential.accessToken;
-        // The signed-in user info.
-        const user = result.user;
-        console.log(user);
-        // IdP data available using getAdditionalUserInfo(result)
-        // ...
-      })
-      .catch((error) => {
-        // Handle Errors here.
-        const errorMessage = error.message;
-        console.log(errorMessage);
-
-        // The email of the user's account used.
-        const email = error.customData.email;
-        // The AuthCredential type that was used.
-        const credential = GoogleAuthProvider.credentialFromError(error);
-        // ...
-      });
-      setModalType(null);
+  const handleGoogleSignIn = async () => {
+  try {
+    const result = await signInWithPopup(auth, googleProvider); // happens immediately
+    const user = result.user;
+    console.log("User signed in with Google:", user);
+  } catch (error) {
+    console.error(error);
   }
+};
 
   return (
     <>
-      <form
+      <div
         className="relative py-3 sm:max-w-xl sm:mx-auto "
-        onSubmit={LogInUser}
+        
       >
         <div className="relative px-4 py-10 bg-white mx-8 md:mx-0 shadow rounded-3xl sm:p-10 border">
           <div className="max-w-md mx-auto">
-            <div className="flex items-center space-x-5 justify-center">
-              <h1 className="text-2xl">Log In</h1>
-            </div>
-            <div className="mt-5">
-              <label className="font-semibold text-sm text-gray-600 pb-1 block">
-                E-mail
-              </label>
-              <input
-                className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
-                type="text"
-                ref={email}
-              />
-              <label className="font-semibold text-sm text-gray-600 pb-1 block">
-                Password
-              </label>
-              {/* password show hide work  */}
-              <div className="relative w-full mt-1 mb-5">
+            <form action="" onSubmit={LogInUser}>
+              <div className="flex items-center space-x-5 justify-center">
+                <h1 className="text-2xl">Log In</h1>
+              </div>
+              <div className="mt-5">
+                <label className="font-semibold text-sm text-gray-600 pb-1 block">
+                  E-mail
+                </label>
                 <input
-                  type={showPassword ? "text" : "password"}
-                  className="border rounded-lg px-3 py-2 pr-10 w-full text-sm"
-                  ref={password}
+                  className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
+                  type="text"
+                  ref={email}
                 />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-2 flex items-center text-gray-600 hover:text-gray-900"
+                <label className="font-semibold text-sm text-gray-600 pb-1 block">
+                  Password
+                </label>
+                {/* password show hide work  */}
+                <div className="relative w-full mt-1 mb-5">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    className="border rounded-lg px-3 py-2 pr-10 w-full text-sm"
+                    ref={password}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute inset-y-0 right-2 flex items-center text-gray-600 hover:text-gray-900"
+                  >
+                    {showPassword ? (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                        />
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                        />
+                      </svg>
+                    ) : (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M13.875 18.825A10.05 10.05 0 0112 19c-4.477 0-8.268-2.943-9.542-7a9.969 9.969 0 012.502-3.469M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                        />
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M3 3l18 18"
+                        />
+                      </svg>
+                    )}
+                  </button>
+                </div>
+              </div>
+              <div className="text-right mb-4">
+                <a
+                  className="text-xs font-display font-semibold text-gray-500 hover:text-gray-600 cursor-pointer"
+                  href="#"
                 >
-                  {showPassword ? (
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                      />
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                      />
-                    </svg>
-                  ) : (
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M13.875 18.825A10.05 10.05 0 0112 19c-4.477 0-8.268-2.943-9.542-7a9.969 9.969 0 012.502-3.469M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                      />
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M3 3l18 18"
-                      />
-                    </svg>
-                  )}
+                  Forgot Password?
+                </a>
+              </div>
+              <div className="mt-5">
+                <button
+                  className=" cursor-pointer py-2 px-4 bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 focus:ring-offset-blue-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg"
+                  type="submit"
+                >
+                  Log In !
                 </button>
               </div>
-            </div>
-            <div className="text-right mb-4">
-              <a
-                className="text-xs font-display font-semibold text-gray-500 hover:text-gray-600 cursor-pointer"
-                href="#"
-              >
-                Forgot Password?
-              </a>
-            </div>
+            </form>
+
             <div className="flex justify-center w-full items-center">
               <div>
                 {/* Sign in with google button  */}
                 <button
-                  onClick={google}
+                  onClick={handleGoogleSignIn}
                   className="cursor-pointer flex items-center justify-center py-2 px-20 bg-white hover:bg-gray-200 focus:ring-blue-500 focus:ring-offset-blue-200 text-gray-700 w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg"
                 >
                   <svg
@@ -230,14 +225,7 @@ const Login = ({ setModalType }) => {
                 </button>
               </div>
             </div>
-            <div className="mt-5">
-              <button
-                className=" cursor-pointer py-2 px-4 bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 focus:ring-offset-blue-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg"
-                type="submit"
-              >
-                Log In !
-              </button>
-            </div>
+
             <div className="flex items-center justify-between mt-4">
               <span className="w-1/5 border-b dark:border-gray-600 md:w-1/4"></span>
               <a
@@ -250,7 +238,7 @@ const Login = ({ setModalType }) => {
             </div>
           </div>
         </div>
-      </form>
+      </div>
     </>
   );
 };
