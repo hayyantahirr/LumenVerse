@@ -103,171 +103,184 @@ function ResponsiveAppBar() {
   };
 
   return (
-    <AppBar position="static">
-      <Container maxWidth="xl">
-        <Toolbar disableGutters>
-          {/* Normal Screen Logo and title  */}
-          <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
-          <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
-            sx={{
-              mr: 2,
-              display: { xs: "none", md: "flex" },
-              fontFamily: "monospace",
-              fontWeight: 500,
+    <AppBar position="static" sx={{ backgroundColor: "#001229" ,boxShadow: "0px 4px 10px rgba(0, 0, 0, 1)"}}>
+      <div className="w-[80%] mx-auto">
+        <Container maxWidth="xl">
+          <Toolbar disableGutters>
+            {/* Normal Screen Logo and title  */}
+            <Box
+              component="img"
+              src="/Images/Logo (1).png"
+              alt="LumenVerse Logo"
+              sx={{ display: { xs: "none", md: "flex" }, mr: 3, width: "5%" }}
+            />
 
-              color: "inherit",
-              textDecoration: "none",
-            }}
-          >
-            LumenVerse
-          </Typography>
+            <Typography
+              variant="h5"
+              noWrap
+              component="a"
+              href="#app-bar-with-responsive-menu"
+              sx={{
+                mr: 2,
+                display: { xs: "none", md: "flex" },
+                fontFamily: "nunito",
+                fontWeight: 500,
+                color: "inherit",
+                textDecoration: "none",
+              }}
+            >
+              LumenVerse
+            </Typography>
 
-          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left",
+            <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+              <IconButton
+                size="large"
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleOpenNavMenu}
+                color="inherit"
+              >
+                <MenuIcon />
+              </IconButton>
+              <Menu
+                id="menu-appbar"
+                anchorEl={anchorElNav}
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "left",
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "left",
+                }}
+                open={Boolean(anchorElNav)}
+                onClose={handleCloseNavMenu}
+                sx={{ display: { xs: "block", md: "none" } }}
+              >
+                {pages.map((page) => (
+                  <Button
+                    key={page.label}
+                    onClick={() => {
+                      handleCloseNavMenu();
+                      // if (page.path) navigate(page.path); // enable later
+                    }}
+                    sx={{ color: "black", display: "block" }}
+                  >
+                    {page.label}
+                  </Button>
+                ))}
+              </Menu>
+            </Box>
+
+            {/* short screen Logo and title */}
+            <Box
+              component="img"
+              src="/Images/Logo (1).png"
+              alt="LumenVerse Logo"
+              sx={{ display: { xs: "flex", md: "none" }, mr: 3, width: "10%" }}
+            />
+            <Typography
+              variant="h5"
+              noWrap
+              component="a"
+              href="#app-bar-with-responsive-menu"
+              sx={{
+                mr: 2,
+                display: { xs: "flex", md: "none" },
+                flexGrow: 1,
+                fontFamily: "nunito",
+                fontWeight: 500,
+                color: "inherit",
+                textDecoration: "none",
               }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{ display: { xs: "block", md: "none" } }}
             >
+              LumenVerse
+            </Typography>
+            <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
               {pages.map((page) => (
-                <Button
+                <MenuItem
                   key={page.label}
                   onClick={() => {
                     handleCloseNavMenu();
                     // if (page.path) navigate(page.path); // enable later
                   }}
-                  sx={{ my: 2, color: "white", display: "block" }}
                 >
-                  {page.label}
-                </Button>
+                  <Typography sx={{ textAlign: "center" }}>
+                    {page.label}
+                  </Typography>
+                </MenuItem>
               ))}
-            </Menu>
-          </Box>
-
-          {/* short screen Logo and title */}
-          <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
-          <Typography
-            variant="h5"
-            noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
-            sx={{
-              mr: 2,
-              display: { xs: "flex", md: "none" },
-              flexGrow: 1,
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
-              color: "inherit",
-              textDecoration: "none",
-            }}
-          >
-            LumenVerse
-          </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
-              <MenuItem
-                key={page.label}
-                onClick={() => {
-                  handleCloseNavMenu();
-                  // if (page.path) navigate(page.path); // enable later
-                }}
-              >
-                <Typography sx={{ textAlign: "center" }}>
-                  {page.label}
-                </Typography>
-              </MenuItem>
-            ))}
-          </Box>
-          {/* Profile and settings part  */}
-          {user ? (
-            <Box sx={{ flexGrow: 0 }}>
-              <Tooltip title="View More ...">
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="Remy Sharp" src="/Images/No profile pic.jpg" />
-                </IconButton>
-              </Tooltip>
-              <Menu
-                sx={{ mt: "45px" }}
-                id="menu-appbar"
-                anchorEl={anchorElUser}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}
-              >
-                {settings.map((setting) => (
-                  <MenuItem
-                    key={setting.label}
-                    onClick={() => {
-                      handleCloseUserMenu();
-                      if (setting.action === "logout") {
-                        logout();
-                      }
-                      // else if (setting.path) navigate(setting.path); // enable later
-                    }}
-                  >
-                    <Typography sx={{ textAlign: "center" }}>
-                      {setting.label}
-                    </Typography>
-                  </MenuItem>
-                ))}
-              </Menu>
             </Box>
-          ) : (
-            <button
-              onClick={() => setModalType("login")}
-              className="cursor-pointer"
-            >
-              Sign In
-            </button>
-          )}
-          {/* Modal Overlay */}
-          {modalType && (
-            <div className="modal-overlay">
-              <div className="modal-content" ref={modalRef}>
-                {modalType === "login" && <Login setModalType={setModalType} />}
-                {modalType === "register" && (
-                  <Register setModalType={setModalType} />
-                )}
+            {/* Profile and settings part  */}
+            {user ? (
+              <Box sx={{ flexGrow: 0 }}>
+                <Tooltip title="View More ...">
+                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                    <Avatar alt="Remy Sharp" src="/Images/No profile pic.jpg" />
+                  </IconButton>
+                </Tooltip>
+                <Menu
+                  sx={{ mt: "45px" }}
+                  id="menu-appbar"
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}
+                >
+                  {settings.map((setting) => (
+                    <MenuItem
+                      key={setting.label}
+                      onClick={() => {
+                        handleCloseUserMenu();
+                        if (setting.action === "logout") {
+                          logout();
+                        }
+                        // else if (setting.path) navigate(setting.path); // enable later
+                      }}
+                    >
+                      <Typography sx={{ textAlign: "center" }}>
+                        {setting.label}
+                      </Typography>
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </Box>
+            ) : (
+              <button
+                onClick={() => setModalType("login")}
+                className="cursor-pointer"
+              >
+                Sign In
+              </button>
+            )}
+            {/* Modal Overlay */}
+            {modalType && (
+              <div className="modal-overlay">
+                <div className="modal-content" ref={modalRef}>
+                  {modalType === "login" && (
+                    <Login setModalType={setModalType} />
+                  )}
+                  {modalType === "register" && (
+                    <Register setModalType={setModalType} />
+                  )}
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {/* login button logic  */}
-        </Toolbar>
-      </Container>
+            {/* login button logic  */}
+          </Toolbar>
+        </Container>
+      </div>
     </AppBar>
   );
 }
