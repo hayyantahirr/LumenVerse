@@ -15,10 +15,11 @@ import { useState } from "react";
 import { useRef } from "react";
 import { useEffect } from "react";
 import { onAuthStateChanged, signOut } from "firebase/auth";
-import { auth } from "../config/Firebase/firebase";
+import { auth, db } from "../config/Firebase/firebase";
 import { useNavigate } from "react-router";
 import Login from "./Login";
 import Register from "./Register";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 
 // Make them objects so we can attach paths/actions later
 const pages = [
@@ -38,7 +39,7 @@ function ResponsiveAppBar() {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
   // Modal states
-
+  const [profilePic, setProfilePic] = useState(false);
   const [modalType, setModalType] = useState(null); // "login" or "register" or null
   const modalRef = useRef();
   const [user, setUser] = useState(null);
@@ -85,6 +86,36 @@ function ResponsiveAppBar() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [modalType]);
+
+  // Get data from Firestore for profile pic
+  const defaultPic = "/Images/No profile pic.jpg";
+
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const userRef = doc(db, "Users", user.uid);
+        const snap = await getDoc(userRef);
+
+        if (snap.exists()) {
+          const data = snap.data();
+          setProfilePic(data.profilePic || defaultPic);
+        } else {
+          // Create user profile if not exists
+          await setDoc(userRef, {
+            userName: user.displayName || "New User",
+            userEmail: user.email,
+            profilePic: user.photoURL || defaultPic,
+            createdAt: new Date(),
+          });
+          setProfilePic(user.photoURL || defaultPic);
+        }
+      } else {
+        setProfilePic(defaultPic);
+      }
+    });
+
+    return () => unsub();
+  }, []);
 
   // Material ui functions
   const handleOpenNavMenu = (event) => {
@@ -238,7 +269,7 @@ function ResponsiveAppBar() {
               <Box sx={{ flexGrow: 0 }}>
                 <Tooltip title="View More ...">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar alt="Remy Sharp" src="/Images/No profile pic.jpg" />
+                    <Avatar alt="Remy Sharp" src={profilePic} />
                   </IconButton>
                 </Tooltip>
                 <Menu
