@@ -11,7 +11,6 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
-import AdbIcon from "@mui/icons-material/Adb";
 import { useState } from "react";
 import { useRef } from "react";
 import { useEffect } from "react";
@@ -24,8 +23,8 @@ import Register from "./Register";
 // Make them objects so we can attach paths/actions later
 const pages = [
   { label: "Home", path: "" }, // add your path here e.g. "/"
-  { label: "Blogs", path: "" }, // add your path here e.g. "/blogs"
-  { label: "Add Blog !", path: "" }, // add your path here e.g. "/add-blog"
+  { label: "Reviews", path: "#reviews" }, // add your path here e.g. "/blogs"
+  { label: "Blogs", path: "" }, // add your path here e.g. "/add-blog"
 ];
 
 const settings = [
@@ -103,7 +102,14 @@ function ResponsiveAppBar() {
   };
 
   return (
-    <AppBar position="static" sx={{ backgroundColor: "#001229" ,boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.9)",zIndex:"1"}}>
+    <AppBar
+      position="static"
+      sx={{
+        backgroundColor: "#001229",
+        boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.9)",
+        zIndex: "1",
+      }}
+    >
       <div className="w-[80%] mx-auto">
         <Container maxWidth="xl">
           <Toolbar disableGutters>
@@ -164,7 +170,14 @@ function ResponsiveAppBar() {
                     key={page.label}
                     onClick={() => {
                       handleCloseNavMenu();
-                      // if (page.path) navigate(page.path); // enable later
+                      if (page.path === "#reviews") {
+                        const element = document.getElementById("reviews");
+                        if (element) {
+                          element.scrollIntoView({ behavior: "smooth" });
+                        }
+                      } else {
+                        // if (page.path) navigate(page.path); // enable later
+                      }
                     }}
                     sx={{ color: "black", display: "block" }}
                   >
@@ -204,7 +217,14 @@ function ResponsiveAppBar() {
                   key={page.label}
                   onClick={() => {
                     handleCloseNavMenu();
-                    // if (page.path) navigate(page.path); // enable later
+                    if (page.path === "#reviews") {
+                      const element = document.getElementById("reviews");
+                      if (element) {
+                        element.scrollIntoView({ behavior: "smooth" });
+                      }
+                    } else {
+                      // if (page.path) navigate(page.path); // enable later
+                    }
                   }}
                 >
                   <Typography sx={{ textAlign: "center" }}>
@@ -213,6 +233,7 @@ function ResponsiveAppBar() {
                 </MenuItem>
               ))}
             </Box>
+
             {/* Profile and settings part  */}
             {user ? (
               <Box sx={{ flexGrow: 0 }}>
@@ -259,6 +280,7 @@ function ResponsiveAppBar() {
               <button
                 onClick={() => setModalType("login")}
                 className="cursor-pointer"
+                id="navbar-login-btn"
               >
                 Sign In
               </button>
