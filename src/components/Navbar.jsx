@@ -12,14 +12,81 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
+import { useState } from "react";
+import { useRef } from "react";
+import { useEffect } from "react";
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import { auth } from "../config/Firebase/firebase";
+import { useNavigate } from "react-router";
+import Login from "./Login";
+import Register from "./Register";
 
-const pages = ["Home", "Blogs", "Blog"];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+// Make them objects so we can attach paths/actions later
+const pages = [
+  { label: "Home", path: "" }, // add your path here e.g. "/"
+  { label: "Blogs", path: "" }, // add your path here e.g. "/blogs"
+  { label: "Add Blog !", path: "" }, // add your path here e.g. "/add-blog"
+];
 
+const settings = [
+  { label: "Profile", path: "" }, // add your path here e.g. "/profile"
+  { label: "Logout", action: "logout" }, // this will call logout()
+];
 function ResponsiveAppBar() {
+  // Material Ui states
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
+  // Modal states
+
+  const [modalType, setModalType] = useState(null); // "login" or "register" or null
+  const modalRef = useRef();
+  const [user, setUser] = useState(null);
+  const navigate = useNavigate();
+  // Firebase functions
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const uid = user.uid;
+        setUser(user);
+        console.log(uid);
+      } else {
+        // User is signed out
+        // ...
+        navigate("/");
+      }
+    });
+  }, []);
+
+  // Logout functionality
+  const logout = () => {
+    signOut(auth)
+      .then(() => {
+        // Sign-out successful.
+
+        console.log("user signed out successfully");
+      })
+      .catch((error) => {
+        // An error happened.
+      });
+  };
+
+  // Login modal logic and functions
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        setModalType(null);
+      }
+    };
+    if (modalType) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [modalType]);
+
+  // Material ui functions
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -39,6 +106,7 @@ function ResponsiveAppBar() {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
+          {/* Normal Screen Logo and title  */}
           <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
           <Typography
             variant="h6"
@@ -50,12 +118,12 @@ function ResponsiveAppBar() {
               display: { xs: "none", md: "flex" },
               fontFamily: "monospace",
               fontWeight: 500,
-              
+
               color: "inherit",
               textDecoration: "none",
             }}
           >
-           LumenVerse
+            LumenVerse
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
@@ -86,12 +154,21 @@ function ResponsiveAppBar() {
               sx={{ display: { xs: "block", md: "none" } }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography sx={{ textAlign: "center" }}>{page}</Typography>
-                </MenuItem>
+                <Button
+                  key={page.label}
+                  onClick={() => {
+                    handleCloseNavMenu();
+                    // if (page.path) navigate(page.path); // enable later
+                  }}
+                  sx={{ my: 2, color: "white", display: "block" }}
+                >
+                  {page.label}
+                </Button>
               ))}
             </Menu>
           </Box>
+
+          {/* short screen Logo and title */}
           <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
           <Typography
             variant="h5"
@@ -113,48 +190,82 @@ function ResponsiveAppBar() {
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: "white", display: "block" }}
+              <MenuItem
+                key={page.label}
+                onClick={() => {
+                  handleCloseNavMenu();
+                  // if (page.path) navigate(page.path); // enable later
+                }}
               >
-                {page}
-              </Button>
+                <Typography sx={{ textAlign: "center" }}>
+                  {page.label}
+                </Typography>
+              </MenuItem>
             ))}
           </Box>
           {/* Profile and settings part  */}
-
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/Images/No profile pic.jpg" />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
+          {user ? (
+            <Box sx={{ flexGrow: 0 }}>
+              <Tooltip title="View More ...">
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <Avatar alt="Remy Sharp" src="/Images/No profile pic.jpg" />
+                </IconButton>
+              </Tooltip>
+              <Menu
+                sx={{ mt: "45px" }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+                {settings.map((setting) => (
+                  <MenuItem
+                    key={setting.label}
+                    onClick={() => {
+                      handleCloseUserMenu();
+                      if (setting.action === "logout") {
+                        logout();
+                      }
+                      // else if (setting.path) navigate(setting.path); // enable later
+                    }}
+                  >
+                    <Typography sx={{ textAlign: "center" }}>
+                      {setting.label}
+                    </Typography>
+                  </MenuItem>
+                ))}
+              </Menu>
+            </Box>
+          ) : (
+            <button
+              onClick={() => setModalType("login")}
+              className="cursor-pointer"
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography sx={{ textAlign: "center" }}>
-                    {setting}
-                  </Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
+              Sign In
+            </button>
+          )}
+          {/* Modal Overlay */}
+          {modalType && (
+            <div className="modal-overlay">
+              <div className="modal-content" ref={modalRef}>
+                {modalType === "login" && <Login setModalType={setModalType} />}
+                {modalType === "register" && (
+                  <Register setModalType={setModalType} />
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* login button logic  */}
         </Toolbar>
       </Container>
     </AppBar>

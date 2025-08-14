@@ -1,13 +1,15 @@
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import React, { useRef, useState } from "react";
+import { createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router";
-import { auth } from "../config/Firebase/firebase";
+import { auth, googleProvider } from "../config/Firebase/firebase";
+import { ClassNames } from "@emotion/react";
 
 const Register = ({ setModalType }) => {
   const email = useRef();
   const password = useRef();
   const name = useRef();
   const [showPassword, setShowPassword] = useState(false);
+  const [googleUser, setGoogleUser] = useState(null);
   const navigate = useNavigate();
 
   //   Creating Email/password user
@@ -34,101 +36,129 @@ const Register = ({ setModalType }) => {
   //   Creating facebook User
 
   // Creating Google User
-
+  const handleGoogleSignIn = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider); // happens immediately
+      const user = result.user;
+      console.log("User signed in with Google:", user);
+      setGoogleUser(user);
+      setModalType(null);
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <>
-      <form
-        className="relative sm:max-w-xl sm:mx-auto "
-        onSubmit={registerUser}
-      >
+      <div className="relative py-3 sm:max-w-xl sm:mx-auto ">
         <div className="relative px-4 py-10 bg-white mx-8 md:mx-0 shadow rounded-3xl sm:p-10 border">
           <div className="max-w-md mx-auto">
-            <div className="flex items-center space-x-5 justify-center">
-              <h1 className="text-2xl">Register !</h1>
-            </div>
-            <div className="mt-5">
-              <label className="font-semibold text-sm text-gray-600 pb-1 block">
-                Name
-              </label>
-              <input
-                className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
-                type="text"
-                ref={name}
-              />
-              <label className="font-semibold text-sm text-gray-600 pb-1 block">
-                E-mail
-              </label>
-              <input
-                className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
-                type="email"
-                ref={email}
-              />
-              <label className="font-semibold text-sm text-gray-600 pb-1 block">
-                Password
-              </label>
-              {/* password show hide work  */}
-              <div className="relative w-full mt-1 mb-5">
+            <form action="" onSubmit={registerUser}>
+              <div className="flex items-center space-x-5 justify-center">
+                <h1 className="text-2xl text-black">Register</h1>
+              </div>
+              <div className="mt-5">
+                <label className="font-semibold text-sm text-gray-600 pb-1 block">
+                  Name
+                </label>
                 <input
-                  type={showPassword ? "text" : "password"}
-                  className="border rounded-lg px-3 py-2 pr-10 w-full text-sm"
-                  ref={password}
+                  className="border border-black rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
+                  type="text"
+                  ref={name}
                 />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-2 flex items-center text-gray-600 hover:text-gray-900"
+                <label className="font-semibold text-sm text-gray-600 pb-1 block">
+                  E-mail
+                </label>
+                <input
+                  className="border border-black rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
+                  type="email"
+                  ref={email}
+                />
+                <label className="font-semibold text-sm text-gray-600 pb-1 block">
+                  Password
+                </label>
+                {/* password show hide work  */}
+                <div className="relative w-full mt-1 mb-5">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    className="border border-black rounded-lg px-3 py-2 pr-10 w-full text-sm"
+                    ref={password}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute inset-y-0 right-2 flex items-center text-gray-600 hover:text-gray-900"
+                  >
+                    {showPassword ? (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                        />
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                        />
+                      </svg>
+                    ) : (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M13.875 18.825A10.05 10.05 0 0112 19c-4.477 0-8.268-2.943-9.542-7a9.969 9.969 0 012.502-3.469M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                        />
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M3 3l18 18"
+                        />
+                      </svg>
+                    )}
+                  </button>
+                </div>
+              </div>
+              <div className="text-right mb-4">
+                <a
+                  className="text-xs font-display font-semibold text-gray-500 hover:text-gray-600 cursor-pointer"
+                  href="#"
                 >
-                  {showPassword ? (
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                      />
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                      />
-                    </svg>
-                  ) : (
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M13.875 18.825A10.05 10.05 0 0112 19c-4.477 0-8.268-2.943-9.542-7a9.969 9.969 0 012.502-3.469M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                      />
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M3 3l18 18"
-                      />
-                    </svg>
-                  )}
+                  Forgot Password?
+                </a>
+              </div>
+              <div className="mt-5">
+                <button
+                  className=" cursor-pointer py-2 px-4 bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 focus:ring-offset-blue-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg"
+                  type="submit"
+                >
+                  Log In !
                 </button>
               </div>
-            </div>
+            </form>
 
-            <div className="flex justify-center w-full items-center">
+            <div className="flex justify-center w-full items-center mt-5 ">
               <div>
-                {/* Sign in with google  */}
-                <button className="flex items-center justify-center py-2 px-20 bg-white hover:bg-gray-200 focus:ring-blue-500 focus:ring-offset-blue-200 text-gray-700 w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg">
+                {/* Sign in with google button  */}
+                <button
+                  onClick={handleGoogleSignIn}
+                  className="cursor-pointer flex items-center justify-center py-2 px-20 bg-white hover:bg-gray-200 focus:ring-blue-500 focus:ring-offset-blue-200 text-gray-700 w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg"
+                >
                   <svg
                     viewBox="0 0 24 24"
                     height="25"
@@ -199,27 +229,20 @@ const Register = ({ setModalType }) => {
                 </button>
               </div>
             </div>
-            <div className="mt-5">
-              <button
-                className="py-2 px-4 bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 focus:ring-offset-blue-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg"
-                type="submit"
-              >
-                Sign Up !
-              </button>
-            </div>
+
             <div className="flex items-center justify-between mt-4">
               <span className="w-1/5 border-b dark:border-gray-600 md:w-1/4"></span>
               <a
                 className="text-xs text-gray-500 uppercase dark:text-gray-400 hover:underline cursor-pointer"
                 onClick={() => setModalType("login")}
               >
-                Already Have an Account ?
+                Already have an Account !
               </a>
               <span className="w-1/5 border-b dark:border-gray-400 md:w-1/4"></span>
             </div>
           </div>
         </div>
-      </form>
+      </div>
     </>
   );
 };

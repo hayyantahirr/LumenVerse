@@ -39,34 +39,33 @@ const Login = ({ setModalType }) => {
 
   //   Sign in with Google
   const handleGoogleSignIn = async () => {
-  try {
-    const result = await signInWithPopup(auth, googleProvider); // happens immediately
-    const user = result.user;
-    console.log("User signed in with Google:", user);
-  } catch (error) {
-    console.error(error);
-  }
-};
+    try {
+      const result = await signInWithPopup(auth, googleProvider); // happens immediately
+      const user = result.user;
+      console.log("User signed in with Google:", user);
+      setGoogleUser(user);
+      setModalType(null);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <>
-      <div
-        className="relative py-3 sm:max-w-xl sm:mx-auto "
-        
-      >
+      <div className="relative py-3 sm:max-w-xl sm:mx-auto ">
         <div className="relative px-4 py-10 bg-white mx-8 md:mx-0 shadow rounded-3xl sm:p-10 border">
           <div className="max-w-md mx-auto">
             <form action="" onSubmit={LogInUser}>
               <div className="flex items-center space-x-5 justify-center">
-                <h1 className="text-2xl">Log In</h1>
+                <h1 className="text-2xl text-black">Log In</h1>
               </div>
               <div className="mt-5">
                 <label className="font-semibold text-sm text-gray-600 pb-1 block">
                   E-mail
                 </label>
                 <input
-                  className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
-                  type="text"
+                  className="border border-black rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
+                  type="email"
                   ref={email}
                 />
                 <label className="font-semibold text-sm text-gray-600 pb-1 block">
@@ -76,7 +75,7 @@ const Login = ({ setModalType }) => {
                 <div className="relative w-full mt-1 mb-5">
                   <input
                     type={showPassword ? "text" : "password"}
-                    className="border rounded-lg px-3 py-2 pr-10 w-full text-sm"
+                    className="border border-black rounded-lg px-3 py-2 pr-10 w-full text-sm"
                     ref={password}
                   />
                   <button
@@ -148,7 +147,7 @@ const Login = ({ setModalType }) => {
               </div>
             </form>
 
-            <div className="flex justify-center w-full items-center">
+            <div className="flex justify-center w-full items-center mt-5 ">
               <div>
                 {/* Sign in with google button  */}
                 <button
