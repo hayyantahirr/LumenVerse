@@ -45,7 +45,7 @@ const Footer = () => {
           <Grid container justifyContent="center" spacing={4} sx={{ mt: 3 }}>
             {["First Link", "Second Link", "Third Link", "Fourth Link"].map(
               (text) => (
-                <Grid item key={text}>
+                <Grid key={text}>
                   <Link
                     href="#"
                     underline="none"

@@ -22,9 +22,10 @@ import Register from "./Register";
 
 // Make them objects so we can attach paths/actions later
 const pages = [
-  { label: "Home", path: "" }, // add your path here e.g. "/"
+  { label: "Home", path: "/" }, // add your path here e.g. "/"
   { label: "Reviews", path: "#reviews" }, // add your path here e.g. "/blogs"
-  { label: "Blogs", path: "" }, // add your path here e.g. "/add-blog"
+  { label: "Blogs", path: "/blogs" }, // add your path here e.g. "/add-blog"
+  { label: "Add Blogs", path: "/addblogs" }, // add your path here e.g. "/add-blog"
 ];
 
 const settings = [
@@ -167,7 +168,6 @@ function ResponsiveAppBar() {
               >
                 {pages.map((page) => (
                   <Button
-                    key={page.label}
                     onClick={() => {
                       handleCloseNavMenu();
                       if (page.path === "#reviews") {
@@ -176,7 +176,7 @@ function ResponsiveAppBar() {
                           element.scrollIntoView({ behavior: "smooth" });
                         }
                       } else {
-                        // if (page.path) navigate(page.path); // enable later
+                        if (page.path) navigate(page.path); // enable later
                       }
                     }}
                     sx={{ color: "black", display: "block" }}
@@ -214,7 +214,6 @@ function ResponsiveAppBar() {
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
               {pages.map((page) => (
                 <MenuItem
-                  key={page.label}
                   onClick={() => {
                     handleCloseNavMenu();
                     if (page.path === "#reviews") {
@@ -223,7 +222,7 @@ function ResponsiveAppBar() {
                         element.scrollIntoView({ behavior: "smooth" });
                       }
                     } else {
-                      // if (page.path) navigate(page.path); // enable later
+                      if (page.path) navigate(page.path); // enable later
                     }
                   }}
                 >
