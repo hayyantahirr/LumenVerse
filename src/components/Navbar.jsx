@@ -62,12 +62,12 @@ function ResponsiveAppBar() {
   const logout = () => {
     signOut(auth)
       .then(() => {
-        // Sign-out successful.
-
+        setUser(null); // instantly updates navbar
+        navigate("/"); // optional redirect
         console.log("user signed out successfully");
       })
       .catch((error) => {
-        // An error happened.
+        console.error(error);
       });
   };
 
