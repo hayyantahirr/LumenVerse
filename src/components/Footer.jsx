@@ -68,7 +68,7 @@ const Footer = () => {
             align="center"
             sx={{ mt: 3 }}
           >
-            © 2020 Nereus. All rights reserved.
+            © {new Date().getFullYear()} LumenVerse. All rights reserved.
           </Typography>
         </Container>
       </Box>

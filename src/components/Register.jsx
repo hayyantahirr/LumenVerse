@@ -1,8 +1,16 @@
 import { createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router";
-import { auth, googleProvider } from "../config/Firebase/firebase";
+import { auth, db, googleProvider } from "../config/Firebase/firebase";
 import { ClassNames } from "@emotion/react";
+import {
+  addDoc,
+  collection,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
 
 const Register = ({ setModalType }) => {
   const email = useRef();
@@ -27,6 +35,18 @@ const Register = ({ setModalType }) => {
       console.log("User registered:", user);
 
       setModalType(null);
+      const docRef = await addDoc(collection(db, "Users"), {
+        userName: name.current.value,
+        userEmail: email.current.value,
+
+        createdAt: new Date(),
+      });
+      console.log("Document written with ID: ", docRef.id);
+
+      await updateDoc(docRef, {
+        id: docRef.id,
+      });
+
       navigate("/");
     } catch (error) {
       console.error("Error during registration:", error.message);
@@ -43,6 +63,24 @@ const Register = ({ setModalType }) => {
       console.log("User signed in with Google:", user);
       setGoogleUser(user);
       setModalType(null);
+      // Saving data to firestore db
+      const userRef = doc(db, "Users", user.uid);
+      const userSnap = await getDoc(userRef);
+
+      if (!userSnap.exists()) {
+        // Create new user only once
+       await setDoc(userRef, {
+          userName: user.displayName,
+          userEmail: user.email,
+          profilePic: user.photoURL,
+          createdAt: new Date(),
+          id : user.uid
+        });
+        
+        console.log("New user created!");
+      } else {
+        console.log("User already exists, skipping creation.");
+      }
     } catch (error) {
       console.error(error);
     }
@@ -61,7 +99,7 @@ const Register = ({ setModalType }) => {
                   Name
                 </label>
                 <input
-                  className="border border-black rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
+                  className="border border-black rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full text-black"
                   type="text"
                   ref={name}
                 />
@@ -69,7 +107,7 @@ const Register = ({ setModalType }) => {
                   E-mail
                 </label>
                 <input
-                  className="border border-black rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
+                  className="border border-black rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full text-black"
                   type="email"
                   ref={email}
                 />
@@ -80,7 +118,7 @@ const Register = ({ setModalType }) => {
                 <div className="relative w-full mt-1 mb-5">
                   <input
                     type={showPassword ? "text" : "password"}
-                    className="border border-black rounded-lg px-3 py-2 pr-10 w-full text-sm"
+                    className="border border-black rounded-lg px-3 py-2 pr-10 w-full text-sm text-black"
                     ref={password}
                   />
                   <button
@@ -147,7 +185,7 @@ const Register = ({ setModalType }) => {
                   className=" cursor-pointer py-2 px-4 bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 focus:ring-offset-blue-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg"
                   type="submit"
                 >
-                  Log In !
+                  Register
                 </button>
               </div>
             </form>
