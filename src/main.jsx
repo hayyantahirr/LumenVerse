@@ -6,6 +6,7 @@ import Home from "./screens/Home";
 import Blogs from "./screens/Blogs";
 import AddBlog from "./screens/AddBlog";
 import BlogDetail from "./screens/BlogDetail";
+import Profile from "./screens/Profile";
 
 const router = createBrowserRouter([
   {
@@ -19,6 +20,7 @@ const router = createBrowserRouter([
       { path: "/blogs", element: <Blogs /> },
       { path: "/addblogs", element: <AddBlog /> },
       { path: "/blogs/:id", element: <BlogDetail /> },
+      {path: "/profile", element: <Profile />},
       {
         path: "*",
         element: <Home />,

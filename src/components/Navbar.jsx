@@ -30,7 +30,7 @@ const pages = [
 ];
 
 const settings = [
-  { label: "Profile", path: "" }, // add your path here e.g. "/profile"
+  { label: "Profile", path: "/profile" }, // add your path here e.g. "/profile"
   { label: "Logout", action: "logout" }, // this will call logout()
 ];
 function ResponsiveAppBar() {
@@ -296,7 +296,7 @@ function ResponsiveAppBar() {
                         if (setting.action === "logout") {
                           logout();
                         }
-                        // else if (setting.path) navigate(setting.path); // enable later
+                        else if (setting.path) navigate(setting.path); // enable later
                       }}
                     >
                       <Typography sx={{ textAlign: "center" }}>
