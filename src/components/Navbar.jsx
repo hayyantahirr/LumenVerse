@@ -103,7 +103,7 @@ function ResponsiveAppBar() {
   };
 
   return (
-    <AppBar position="static" sx={{ backgroundColor: "#001229" ,boxShadow: "0px 4px 10px rgba(0, 0, 0, 1)"}}>
+    <AppBar position="static" sx={{ backgroundColor: "#001229" ,boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.9)",zIndex:"1"}}>
       <div className="w-[80%] mx-auto">
         <Container maxWidth="xl">
           <Toolbar disableGutters>
