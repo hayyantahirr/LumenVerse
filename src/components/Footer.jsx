@@ -1,19 +1,13 @@
-import React from "react";
-import {
-  Box,
-  Container,
-  Grid,
-  Link,
-  Typography,
-  IconButton,
-  Stack,
-} from "@mui/material";
-import FacebookIcon from "@mui/icons-material/Facebook";
-import TwitterIcon from "@mui/icons-material/Twitter";
-import InstagramIcon from "@mui/icons-material/Instagram";
-import LinkedInIcon from "@mui/icons-material/LinkedIn";
+import { Box, Container, Grid, Link, Typography, Stack } from "@mui/material";
 
 const Footer = () => {
+  // Your navigation links with their actual destinations
+  const navLinks = [
+    { text: "Home", href: "/" },
+    { text: "Blog", href: "/blogs" },
+    { text: "Add Blog", href: "/addblogs" }
+  ];
+
   return (
     <>
       <Box
@@ -23,13 +17,11 @@ const Footer = () => {
           mt: 10,
           borderTop: "10px solid",
           borderColor: "divider",
-          
         }}
       >
         <Container maxWidth="md">
           {/* Logo and Brand */}
           <Stack alignItems="center" spacing={1}>
-            {/* Replace with your own logo */}
             <Box
               component="img"
               src="/public/Images/icon.svg" // Logo
@@ -43,23 +35,19 @@ const Footer = () => {
 
           {/* Navigation Links */}
           <Grid container justifyContent="center" spacing={4} sx={{ mt: 3 }}>
-            {["First Link", "Second Link", "Third Link", "Fourth Link"].map(
-              (text) => (
-                <Grid key={text}>
-                  <Link
-                    href="#"
-                    underline="none"
-                    color="white"
-                    fontWeight="medium"
-                  >
-                    {text}
-                  </Link>
-                </Grid>
-              )
-            )}
+            {navLinks.map((link) => (
+              <Grid item key={link.text}>
+                <Link
+                  href={link.href}
+                  underline="none"
+                  color="white"
+                  fontWeight="medium"
+                >
+                  {link.text}
+                </Link>
+              </Grid>
+            ))}
           </Grid>
-
-          {/* Social Media Icons */}
 
           {/* Copyright */}
           <Typography

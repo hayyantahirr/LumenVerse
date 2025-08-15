@@ -29,10 +29,6 @@ const pages = [
   { label: "Add Blogs", path: "/addblogs" }, // add your path here e.g. "/add-blog"
 ];
 
-const settings = [
-  { label: "Profile", path: "/profile" }, // add your path here e.g. "/profile"
-  { label: "Logout", action: "logout" }, // this will call logout()
-];
 function ResponsiveAppBar() {
   // Material Ui states
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -44,6 +40,7 @@ function ResponsiveAppBar() {
   const modalRef = useRef();
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
+
   // Firebase functions
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -117,6 +114,10 @@ function ResponsiveAppBar() {
     return () => unsub();
   }, []);
 
+  const settings = [
+    { label: "Profile", path: "/profile/" + user?.uid }, // add your path here e.g. "/profile"
+    { label: "Logout", action: "logout" }, // this will call logout()
+  ];
   // Material ui functions
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -201,6 +202,15 @@ function ResponsiveAppBar() {
                   <Button
                     onClick={() => {
                       handleCloseNavMenu();
+                      if (!user && page.path === "/addblogs") {
+                        setModalType("login");
+                        return;
+                      }
+                      if (!user && page.path === "/blogs") {
+                        setModalType("login");
+                        return;
+                      }
+
                       if (page.path === "#reviews") {
                         const element = document.getElementById("reviews");
                         if (element) {
@@ -247,6 +257,15 @@ function ResponsiveAppBar() {
                 <MenuItem
                   onClick={() => {
                     handleCloseNavMenu();
+                    if (!user && page.path === "/addblogs") {
+                      setModalType("login");
+                      return;
+                    }
+                    if (!user && page.path === "/blogs") {
+                      setModalType("login");
+                      return;
+                    }
+
                     if (page.path === "#reviews") {
                       const element = document.getElementById("reviews");
                       if (element) {
@@ -295,8 +314,7 @@ function ResponsiveAppBar() {
                         handleCloseUserMenu();
                         if (setting.action === "logout") {
                           logout();
-                        }
-                        else if (setting.path) navigate(setting.path); // enable later
+                        } else if (setting.path) navigate(setting.path); // enable later
                       }}
                     >
                       <Typography sx={{ textAlign: "center" }}>
