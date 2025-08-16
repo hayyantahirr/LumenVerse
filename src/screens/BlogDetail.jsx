@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { db } from "../config/Firebase/firebase";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import Loading from "../components/Loading";
@@ -7,6 +7,7 @@ import Loading from "../components/Loading";
 const BlogDetail = () => {
   const params = useParams();
   const [blog, setBlog] = useState();
+  const navigate = useNavigate();
   async function getDatafromdb() {
     const q = query(collection(db, "Blogs"), where("id", "==", params.id));
 
@@ -71,6 +72,32 @@ const BlogDetail = () => {
           <span classNAme="text-sm text-lime-400 font-bold pr-1">
             Add to BookMarks
           </span>
+        </button>
+
+        <button
+          className="mt-6  bg-white text-center w-40 mx-auto  rounded-2xl h-10 relative text-black text-xl font-semibold group cursor-pointer"
+          type="button"
+          title="Go Back"
+          onClick={() => navigate(-1)}
+        >
+          <div className=" bg-[#001229] rounded-xl h-8 w-1/4 flex items-center justify-center absolute left-1 top-[4px] group-hover:w-[150px] z-10 duration-500 text-white">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 1024 1024"
+              height="25px"
+              width="25px"
+            >
+              <path
+                d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64z"
+                fill="#ffffff"
+              ></path>
+              <path
+                d="m237.248 512 265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312L237.248 512z"
+                fill="#ffffff"
+              ></path>
+            </svg>
+          </div>
+          <p className="translate-x-2">Go Back</p>
         </button>
       </div>
     </>
