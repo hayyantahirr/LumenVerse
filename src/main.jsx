@@ -7,6 +7,8 @@ import Blogs from "./screens/Blogs";
 import AddBlog from "./screens/AddBlog";
 import BlogDetail from "./screens/BlogDetail";
 import Profile from "./screens/Profile";
+import { Provider } from "react-redux";
+import store from "./config/Redux/store";
 
 const router = createBrowserRouter([
   {
@@ -30,5 +32,7 @@ const router = createBrowserRouter([
 ]);
 
 createRoot(document.getElementById("root")).render(
-  <RouterProvider router={router} />
+  <Provider store={store}>
+    <RouterProvider router={router} />
+  </Provider>
 );
