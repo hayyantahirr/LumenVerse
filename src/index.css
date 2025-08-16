@@ -4,6 +4,10 @@
   background-color: #001229;
 } */
 
+*{
+  /* border: 1px solid red;  */
+}
+
 /* Wrapper for entire screen */
 .main-wrapper {
   position: relative;
