@@ -2,6 +2,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { auth } from "../config/Firebase/firebase";
+import BookMark from "../components/BookMark";
 
 const Home = () => {
   const [user, setUser] = useState(null);
@@ -111,6 +112,7 @@ const Home = () => {
         </div>
       </section>
       {/* Section 1 ended */}
+      <BookMark />
       {/* Section 2 Started  */}
       <section className="bg-[#001229] w-[80%] mx-auto" id="reviews">
         <div className="container px-6 py-10 mx-auto">

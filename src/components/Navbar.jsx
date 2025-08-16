@@ -136,7 +136,7 @@ function ResponsiveAppBar() {
 
   return (
     <AppBar
-      position="static"
+      position="fixed"
       sx={{
         backgroundColor: "#001229",
         boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.9)",

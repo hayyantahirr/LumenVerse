@@ -1,5 +1,5 @@
 const Bookmarks = () => {
-  return <div>Bookmarks</div>;
+  return <></>;
 };
 
 export default Bookmarks;

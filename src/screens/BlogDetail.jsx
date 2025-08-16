@@ -69,7 +69,7 @@ const BlogDetail = () => {
               fillRule="evenodd"
             ></path>
           </svg>
-          <span classNAme="text-sm text-lime-400 font-bold pr-1">
+          <span className="text-sm text-lime-400 font-bold pr-1">
             Add to BookMarks
           </span>
         </button>
