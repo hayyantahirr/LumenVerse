@@ -9,6 +9,24 @@ const AddBlog = () => {
   const article = useRef();
   const tags = useRef();
   const [user, setUser] = useState(null);
+  const [error, setError] = useState("");
+  const [titleValid, setTitleValid] = useState(null); // null = untouched, true = valid, false = invalid
+
+  const maxTitleWords = 7;
+  const maxArticleWords = 300;
+
+  // Validation logics
+  const handleTitleChange = (e) => {
+    const value = e.target.value;
+    const lettersOnly = value.replace(/\s+/g, ""); // remove spaces
+    const length = lettersOnly.length;
+
+    if (length >= 10 && length <= 40) {
+      setTitleValid(true);
+    } else {
+      setTitleValid(false);
+    }
+  };
 
   // Get User Details
 
@@ -33,13 +51,14 @@ const AddBlog = () => {
     console.log(subtext.current.value);
     console.log(article.current.value);
     console.log(tags.current.value);
+    if (!validateForm()) return; // stop if invalid
     const docRef = await addDoc(collection(db, "Blogs"), {
       title: title.current.value,
       subText: subtext.current.value,
       Article: article.current.value,
       tags: tags.current.value,
-      userName : user?.displayName,
-      Uid : user?.uid
+      userName: user?.displayName,
+      Uid: user?.uid,
     });
     console.log("Document written with ID: ", docRef.id);
 
@@ -77,9 +96,38 @@ const AddBlog = () => {
             type="text"
             id="title-input"
             ref={title}
+            onChange={handleTitleChange}
           />
+          {/* Title validation started  */}
+          {titleValid === false && (
+            <div className="mt-2 flex items-center gap-1">
+              <div className="w-4 fill-rose-500">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M24,12A12,12,0,1,1,12,0,12.013,12.013,0,0,1,24,12ZM13,5H11V15h2Zm0,12H11v2h2Z"></path>
+                </svg>
+              </div>
+              <p className="capitalize font-medium text-rose-500">
+                Title must be 10–40 letters (excluding spaces).
+              </p>
+            </div>
+          )}
+
+          {titleValid === true && (
+            <div className="mt-2 flex items-center gap-1">
+              <div className="w-4 fill-green-500">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="m12,0C5.383,0,0,5.383,0,12s5.383,12,12,12,12-5.383,12-12S18.617,0,12,0Zm-.091,15.419c-.387.387-.896.58-1.407.58s-1.025-.195-1.416-.585l-2.782-2.696,1.393-1.437,2.793,2.707,5.809-5.701,1.404,1.425-5.793,5.707Z"></path>
+                </svg>
+              </div>
+              <p className="capitalize font-medium text-green-500">
+                Looks good ✅
+              </p>
+            </div>
+          )}
+          {/* title validation ended */}
         </div>
         {/* Title input ended */}
+
         {/* subtext started */}
         <div className="w-[80%]  p-5 bg-gray-300  rounded-lg font-mono">
           <label
@@ -137,10 +185,7 @@ const AddBlog = () => {
         {/* Tags Ended */}
         {/* Show Name Started  */}
         <div className="w-[80%]  p-5 bg-gray-300  rounded-lg font-mono">
-          <label
-            className="block text-gray-700 opacity-60 text-sm font-bold mb-2"
-            
-          >
+          <label className="block text-gray-700 opacity-60 text-sm font-bold mb-2">
             Blog Post By :
           </label>
 
