@@ -68,6 +68,14 @@ const BlogDetail = () => {
             <h4 className="w-[90%] mx-auto">{blog?.tags}</h4>
           </div>
           {/* Tags ended */}
+          {/* Tags started */}
+          <div className="flex w-[90%] mt-5 opacity-65 ml-auto">
+            <span className=" italic text-yellow-400 ml-auto">
+              📜 A Blog By :
+            </span>
+            <h1 className="ml-3 mr-2">{blog?.userName}</h1>
+          </div>
+          {/* Tags ended */}
           {/* Add to book Mark Button started  */}
           <button
             onClick={() => {

@@ -1,13 +1,30 @@
 import { addDoc, collection, updateDoc } from "firebase/firestore";
-import { useRef } from "react";
-import { db } from "../config/Firebase/firebase";
+import { useEffect, useRef, useState } from "react";
+import { auth, db } from "../config/Firebase/firebase";
+import { onAuthStateChanged } from "firebase/auth";
 
 const AddBlog = () => {
   const title = useRef();
   const subtext = useRef();
   const article = useRef();
   const tags = useRef();
+  const [user, setUser] = useState(null);
 
+  // Get User Details
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const uid = user.uid;
+        setUser(user);
+        console.log(user);
+      } else {
+        // User is signed out
+        // ...
+        navigate("/");
+      }
+    });
+  }, []);
   // Adding blog to firebase db
 
   async function submitBlog(e) {
@@ -21,12 +38,19 @@ const AddBlog = () => {
       subText: subtext.current.value,
       Article: article.current.value,
       tags: tags.current.value,
+      userName : user?.displayName,
+      Uid : user?.uid
     });
     console.log("Document written with ID: ", docRef.id);
 
     await updateDoc(docRef, {
       id: docRef.id,
     });
+
+    title.current.value = "";
+    subtext.current.value = "";
+    article.current.value = "";
+    tags.current.value = "";
   }
 
   return (
@@ -43,7 +67,7 @@ const AddBlog = () => {
         <div className="w-[80%]  p-5 bg-gray-300  rounded-lg font-mono">
           <label
             className="block opacity-60 text-sm font-bold mb-2 text-gray-700"
-            htmlFor="unique-input"
+            htmlFor="title-input"
           >
             Title
           </label>
@@ -51,7 +75,7 @@ const AddBlog = () => {
             className="text-sm custom-input w-[100%] px-4 py-2 border border-gray-300 rounded-lg shadow-sm transition duration-300 ease-in-out transform focus:-translate-y-1 focus:outline-blue-300 hover:shadow-lg hover:border-blue-300 bg-gray-100"
             placeholder="Enter your title here"
             type="text"
-            id="unique-input"
+            id="title-input"
             ref={title}
           />
         </div>
@@ -60,7 +84,7 @@ const AddBlog = () => {
         <div className="w-[80%]  p-5 bg-gray-300  rounded-lg font-mono">
           <label
             className="block text-gray-700 opacity-60 text-sm font-bold mb-2"
-            htmlFor="unique-input"
+            htmlFor="sub-text-input"
           >
             Sub-Text
           </label>
@@ -68,7 +92,7 @@ const AddBlog = () => {
             className="text-sm custom-input w-[100%] px-4 py-2 border border-gray-300 rounded-lg shadow-sm transition duration-300 ease-in-out transform focus:-translate-y-1 focus:outline-blue-300 hover:shadow-lg hover:border-blue-300 bg-gray-100"
             placeholder="Enter your sub-text here"
             type="text"
-            id="unique-input"
+            id="sub-text-input"
             ref={subtext}
           />
         </div>
@@ -77,7 +101,7 @@ const AddBlog = () => {
         <div className="w-[80%]  p-5 bg-gray-300  rounded-lg font-mono">
           <label
             className="block text-gray-700 opacity-60 text-sm font-bold mb-2"
-            htmlFor="unique-input"
+            htmlFor="article-input"
           >
             Article
           </label>
@@ -85,7 +109,7 @@ const AddBlog = () => {
             className="resize-none overflow-hidden text-sm custom-input w-[100%] px-4 py-2 border border-gray-300 rounded-lg shadow-sm transition duration-300 ease-in-out transform focus:-translate-y-1 focus:outline-blue-300 hover:shadow-lg hover:border-blue-300 bg-gray-100"
             placeholder="Enter text here"
             type="text"
-            id="unique-input"
+            id="article-input"
             ref={article}
             onInput={(e) => {
               e.target.style.height = "100px"; // reset to base height
@@ -98,7 +122,7 @@ const AddBlog = () => {
         <div className="w-[80%]  p-5 bg-gray-300  rounded-lg font-mono">
           <label
             className="block text-gray-700 opacity-60 text-sm font-bold mb-2"
-            htmlFor="unique-input"
+            htmlFor="tags-input"
           >
             Tags
           </label>
@@ -106,11 +130,25 @@ const AddBlog = () => {
             className="overflow-hidden text-sm custom-input w-[100%] px-4 py-2 border border-gray-300 rounded-lg shadow-sm transition duration-300 ease-in-out transform focus:-translate-y-1 focus:outline-blue-300 hover:shadow-lg hover:border-blue-300 bg-gray-100"
             placeholder="#EnterYourTagHere!"
             type="text"
-            id="unique-input"
+            id="tags-input"
             ref={tags}
           />
         </div>
         {/* Tags Ended */}
+        {/* Show Name Started  */}
+        <div className="w-[80%]  p-5 bg-gray-300  rounded-lg font-mono">
+          <label
+            className="block text-gray-700 opacity-60 text-sm font-bold mb-2"
+            
+          >
+            Blog Post By :
+          </label>
+
+          <h1 className="opacity-60 overflow-hidden text-sm custom-input w-[100%] px-4 py-2 border border-gray-300 rounded-lg shadow-sm transition duration-300 ease-in-out transform focus:-translate-y-1 focus:outline-blue-300 hover:shadow-lg hover:border-blue-300 bg-gray-100 cursor-not-allowed">
+            {user?.displayName}
+          </h1>
+        </div>
+        {/* Show Name Ended */}
         {/* Submit Button Started  */}
         <button
           type="submit"

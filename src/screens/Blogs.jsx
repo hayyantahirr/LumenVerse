@@ -35,9 +35,11 @@ const Blogs = () => {
                 key={item.id}
                 title={item.title}
                 subText={item.subText}
-                article={item.Article.slice(0, 100)}
-                tags={item.tags.slice(0, 70)}
+                article={item.Article.slice(0, 50)}
+                tags={item.tags.slice(0, 20)}
                 id={item.id}
+                userName={item.userName}
+                Uid={item.Uid}
               />
             
           ))

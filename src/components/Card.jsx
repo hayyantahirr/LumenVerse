@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router";
 
-const Card = ({ title, subText, article, tags, id }) => {
+const Card = ({ title, subText, article, tags, id, userName }) => {
   const navigate = useNavigate();
   function handleClick() {
     navigate(`/blogs/${id}`);
@@ -18,8 +18,11 @@ const Card = ({ title, subText, article, tags, id }) => {
             <p className="mt-5 text-sm text-gray-500 dark:text-gray-300 mb-5">
               {article}...
             </p>
-            <p className="mt-5 text-sm text-gray-500 dark:text-gray-300 mb-5">
-              🏷️ Tags : {tags}
+            <p className="mt-5 text-sm text-gray-500 dark:text-gray-300 mb-2">
+              🏷️ Tags : {tags}...
+            </p>
+            <p className="text-sm text-gray-500 dark:text-gray-300 opacity-50 text-end">
+              Blog Post By : {userName}
             </p>
           </div>
 
