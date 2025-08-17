@@ -3,6 +3,7 @@ import Card from "../components/Card";
 import { collection, getDocs, query } from "firebase/firestore";
 import { db } from "../config/Firebase/firebase";
 import Loading from "../components/Loading";
+import BookMark from "../components/BookMark";
 
 const Blogs = () => {
   const [blog, setBlog] = useState([]);
@@ -24,17 +25,21 @@ const Blogs = () => {
   }, []);
   return (
     <>
-      <div className="w-[80%] mx-auto gap-5 flex flex-wrap justify-center mt-15">
+      <div className="w-[80%] mx-auto gap-5 flex flex-wrap justify-center mt-30">
+        <BookMark/>
         {blog?.length > 0 ? (
           blog.map((item) => (
-            <Card
-              key={item.id}
-              title={item.title}
-              subText={item.subText}
-              article={item.Article.slice(0,100)}
-              tags={item.tags}
-              id={item.id}
-            />
+           
+             
+              <Card
+                key={item.id}
+                title={item.title}
+                subText={item.subText}
+                article={item.Article.slice(0, 100)}
+                tags={item.tags.slice(0, 70)}
+                id={item.id}
+              />
+            
           ))
         ) : (
           <Loading />

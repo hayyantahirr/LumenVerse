@@ -1,11 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const bmSlice = createSlice({
+const bookMarkSlice = createSlice({
   name: "bookMark",
   initialState: [],
   reducers: {
     addToBookMark: (state, action) => {
       state.push(action.payload);
+      console.log("state", state);
+      console.log("action", action);
     },
     removeFromBookMark: (state, action) => {
       return state.filter((item) => item.id !== action.payload);
@@ -13,5 +15,5 @@ const bmSlice = createSlice({
   },
 });
 
-export const { addToBookMark, removeFromBookMark } = bmSlice.actions;
-export default bmSlice.reducer;
+export const { addToBookMark, removeFromBookMark } = bookMarkSlice.actions;
+export default bookMarkSlice.reducer;

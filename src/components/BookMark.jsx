@@ -1,9 +1,39 @@
-import React from "react";
+import { useState } from "react";
+import Bookmarks from "./Bookmarks";
 
-const BookMark = () => {
+const BookMark = ({}) => {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
     <>
-      <button className="fixed bottom-15 right-15 cursor-pointer bg-gray-700 px-5 py-5 rounded-full text-white tracking-wider shadow-xl animate-bounce hover:animate-none ">
+      {/* Blur Background */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40"
+          onClick={() => setIsOpen(false)}
+        ></div>
+      )}
+
+      {/* The floating bubble modal */}
+      {isOpen && (
+        <div className="fixed bottom-28 right-10 z-50 w-80 p-4 bg-white dark:bg-gray-800 shadow-xl rounded-2xl animate-scaleIn">
+          <div className="text-sm text-gray-700 dark:text-gray-200">
+            <Bookmarks />
+          </div>
+          <button
+            className="mt-3 px-4 py-2 bg-red-500 hover:bg-red-600 text-white text-sm rounded-lg"
+            onClick={() => setIsOpen(false)}
+          >
+            Close
+          </button>
+        </div>
+      )}
+
+      {/* Floating button */}
+      <button
+        onClick={() => setIsOpen(true)}
+        className="fixed bottom-10 right-10 cursor-pointer bg-gray-700 px-5 py-5 rounded-full text-white tracking-wider shadow-xl animate-bounce hover:animate-none"
+      >
         <svg
           viewBox="0 -0.5 25 25"
           height="20px"

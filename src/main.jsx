@@ -8,8 +8,7 @@ import AddBlog from "./screens/AddBlog";
 import BlogDetail from "./screens/BlogDetail";
 import Profile from "./screens/Profile";
 import { Provider } from "react-redux";
-import { persistor, store } from "./config/Redux/store";
-import { PersistGate } from "redux-persist/integration/react";
+import store from "./config/Redux/store";
 
 const router = createBrowserRouter([
   {
@@ -34,8 +33,6 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")).render(
   <Provider store={store}>
-    <PersistGate loading={null} persistor={persistor}>
-      <RouterProvider router={router} />
-    </PersistGate>
+    <RouterProvider router={router} />
   </Provider>
 );
