@@ -1,9 +1,11 @@
 import { useState } from "react";
 import Bookmarks from "./Bookmarks";
+import { useSelector } from "react-redux";
 
 const BookMark = ({}) => {
   const [isOpen, setIsOpen] = useState(false);
 
+  const bookmarks = useSelector((state) => state.bookMark) || [];
   return (
     <>
       {/* Blur Background */}
@@ -13,7 +15,6 @@ const BookMark = ({}) => {
           onClick={() => setIsOpen(false)}
         ></div>
       )}
-
       {/* The floating bubble modal */}
       {isOpen && (
         <div className="fixed bottom-28 right-10 z-50 w-80 p-4 bg-white dark:bg-gray-800 shadow-xl rounded-2xl animate-scaleIn">
@@ -28,11 +29,10 @@ const BookMark = ({}) => {
           </button>
         </div>
       )}
-
       {/* Floating button */}
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-10 right-10 cursor-pointer bg-gray-700 px-5 py-5 rounded-full text-white tracking-wider shadow-xl animate-bounce hover:animate-none"
+        className=" fixed bottom-10 right-10 cursor-pointer bg-gray-700 px-5 py-5 rounded-full text-white tracking-wider shadow-xl animate-bounce hover:animate-none"
       >
         <svg
           viewBox="0 -0.5 25 25"
@@ -50,7 +50,13 @@ const BookMark = ({}) => {
             fill="#ffffff"
           ></path>
         </svg>
-      </button>
+        {/* Count Badge */}
+        {bookmarks.length > 0 && (
+          <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+            {bookmarks.length}
+          </span>
+        )}
+      </button>{" "}
     </>
   );
 };
