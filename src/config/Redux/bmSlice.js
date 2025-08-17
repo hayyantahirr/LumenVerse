@@ -13,8 +13,11 @@ const bookMarkSlice = createSlice({
     removeFromBookMark: (state, action) => {
       return state.filter((item) => item.id !== action.payload);
     },
+     clearBookMark: () => {
+      return []; // simply reset to empty array
+    },
   },
 });
 
-export const { addToBookMark, removeFromBookMark } = bookMarkSlice.actions;
+export const { addToBookMark, removeFromBookMark ,clearBookMark } = bookMarkSlice.actions;
 export default bookMarkSlice.reducer;

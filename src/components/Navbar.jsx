@@ -20,6 +20,8 @@ import { useNavigate } from "react-router";
 import Login from "./Login";
 import Register from "./Register";
 import { doc, getDoc, setDoc } from "firebase/firestore";
+import { useDispatch } from "react-redux";
+import { clearBookMark } from "../config/Redux/bmSlice";
 
 // Make them objects so we can attach paths/actions later
 const pages = [
@@ -40,6 +42,7 @@ function ResponsiveAppBar() {
   const modalRef = useRef();
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   // Firebase functions
   useEffect(() => {
@@ -63,6 +66,7 @@ function ResponsiveAppBar() {
         setUser(null); // instantly updates navbar
         navigate("/"); // optional redirect
         console.log("user signed out successfully");
+        dispatch(clearBookMark());
       })
       .catch((error) => {
         console.error(error);

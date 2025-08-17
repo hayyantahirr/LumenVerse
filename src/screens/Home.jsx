@@ -15,10 +15,6 @@ const Home = () => {
         const uid = user.uid;
         setUser(user);
         console.log(uid);
-      } else {
-        // User is signed out
-        // ...
-        navigate("/");
       }
     });
   }, []);
@@ -112,7 +108,8 @@ const Home = () => {
         </div>
       </section>
       {/* Section 1 ended */}
-      <BookMark />
+      {user && <BookMark />}
+
       {/* Section 2 Started  */}
       <section className="bg-[#001229] w-[80%] mx-auto" id="reviews">
         <div className="container px-6 py-10 mx-auto">
