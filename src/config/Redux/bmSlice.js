@@ -5,9 +5,10 @@ const bookMarkSlice = createSlice({
   initialState: [],
   reducers: {
     addToBookMark: (state, action) => {
-      state.push(action.payload);
-      console.log("state", state);
-      console.log("action", action);
+      const exists = state.find((item) => item.id === action.payload.id);
+      if (!exists) {
+        state.push(action.payload); // only add if not already there
+      }
     },
     removeFromBookMark: (state, action) => {
       return state.filter((item) => item.id !== action.payload);

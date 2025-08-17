@@ -4,7 +4,7 @@ import { db } from "../config/Firebase/firebase";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import Loading from "../components/Loading";
 import BookMark from "../components/BookMark";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addToBookMark } from "../config/Redux/bmSlice";
 
 const BlogDetail = () => {
@@ -12,6 +12,8 @@ const BlogDetail = () => {
   const [blog, setBlog] = useState();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const bookMark = useSelector((state) => state.bookMark);
+
   async function getDatafromdb() {
     const q = query(collection(db, "Blogs"), where("id", "==", params.id));
 
@@ -26,6 +28,7 @@ const BlogDetail = () => {
   useEffect(() => {
     getDatafromdb();
   }, []);
+  const isBookmarked = blog && bookMark.some((item) => item.id === blog.id);
   return (
     <>
       {!blog ? (
@@ -65,19 +68,26 @@ const BlogDetail = () => {
             <h4 className="w-[90%] mx-auto">{blog?.tags}</h4>
           </div>
           {/* Tags ended */}
-          {/* Book Mark button  */}
           <button
-            title="Save"
             onClick={() => {
-              dispatch(addToBookMark({ ...blog, quantity: 1 }));
+              if (!isBookmarked) {
+                dispatch(addToBookMark({ ...blog, quantity: 1 }));
+              }
             }}
-            className="mt-6 ml-6 cursor-pointer flex items-center fill-sky-400 bg-[#0d195c] hover:bg-[#0f172a] rounded-md duration-100 p-2 w-[170px]"
+            disabled={isBookmarked}
+            className={`mt-6 ml-6 cursor-pointer flex items-center rounded-md duration-100 p-2 w-[170px] 
+        ${
+          isBookmarked
+            ? "bg-gray-500 opacity-70"
+            : "bg-[#0d195c] hover:bg-[#0f172a]"
+        }`}
           >
             <svg
               viewBox="0 -0.5 25 25"
               height="20px"
               width="20px"
               xmlns="http://www.w3.org/2000/svg"
+              className={isBookmarked ? "fill-gray-400" : "fill-sky-400"}
             >
               <path
                 strokeLinejoin="round"
@@ -89,10 +99,9 @@ const BlogDetail = () => {
               ></path>
             </svg>
             <span className="text-sm text-[#ffffff] font-bold pr-1">
-              Add to BookMarks
+              {isBookmarked ? "Already Bookmarked" : "Add to BookMarks"}
             </span>
           </button>
-          {/* Book Mark Button ended */}
           {/* Go to home button started  */}
           <button
             className="mt-6 bg-white text-center w-40 mx-auto rounded-2xl h-10 relative text-black text-xl font-semibold group cursor-pointer"
