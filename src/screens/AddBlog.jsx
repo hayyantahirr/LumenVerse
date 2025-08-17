@@ -19,7 +19,6 @@ const AddBlog = () => {
     const docRef = await addDoc(collection(db, "Blogs"), {
       title: title.current.value,
       subText: subtext.current.value,
-
       Article: article.current.value,
       tags: tags.current.value,
     });
@@ -40,6 +39,7 @@ const AddBlog = () => {
         <h1 className="text-3xl font-bold text-[#facc15] w-[80%] mx-auto mt-5 mb-2 opacity-55">
           Create your blog now !{" "}
         </h1>
+        {/* Title input started  */}
         <div className="w-[80%]  p-5 bg-gray-300  rounded-lg font-mono">
           <label
             className="block opacity-60 text-sm font-bold mb-2 text-gray-700"
@@ -55,7 +55,8 @@ const AddBlog = () => {
             ref={title}
           />
         </div>
-
+        {/* Title input ended */}
+        {/* subtext started */}
         <div className="w-[80%]  p-5 bg-gray-300  rounded-lg font-mono">
           <label
             className="block text-gray-700 opacity-60 text-sm font-bold mb-2"
@@ -71,7 +72,8 @@ const AddBlog = () => {
             ref={subtext}
           />
         </div>
-
+        {/* subtext ended */}
+        {/* Article started */}
         <div className="w-[80%]  p-5 bg-gray-300  rounded-lg font-mono">
           <label
             className="block text-gray-700 opacity-60 text-sm font-bold mb-2"
@@ -91,6 +93,8 @@ const AddBlog = () => {
             }}
           ></textarea>
         </div>
+        {/* Article ended */}
+        {/* Tags Started  */}
         <div className="w-[80%]  p-5 bg-gray-300  rounded-lg font-mono">
           <label
             className="block text-gray-700 opacity-60 text-sm font-bold mb-2"
@@ -106,8 +110,12 @@ const AddBlog = () => {
             ref={tags}
           />
         </div>
-
-        <button type="submit" className="relative cursor-pointer py-4 px-8 text-center font-barlow inline-flex justify-center text-base uppercase text-white rounded-lg border-solid transition-transform duration-300 ease-in-out group outline-offset-4 focus:outline focus:outline-2 focus:outline-white focus:outline-offset-4 overflow-hidden mt-3">
+        {/* Tags Ended */}
+        {/* Submit Button Started  */}
+        <button
+          type="submit"
+          className="relative cursor-pointer py-4 px-8 text-center font-barlow inline-flex justify-center text-base uppercase text-white rounded-lg border-solid transition-transform duration-300 ease-in-out group outline-offset-4 focus:outline focus:outline-2 focus:outline-white focus:outline-offset-4 overflow-hidden mt-3"
+        >
           <span className="relative z-20">Submit</span>
 
           <span className="absolute left-[-75%] top-0 h-full w-[50%] bg-white/20 rotate-12 z-10 blur-lg group-hover:left-[125%] transition-all duration-1000 ease-in-out"></span>
@@ -117,6 +125,7 @@ const AddBlog = () => {
           <span className="w-1/2 drop-shadow-3xl transition-all duration-300 block border-[#D4EDF9] absolute h-[60%] group-hover:h-[90%] rounded-bl-lg border-l-2 border-b-2 left-0 bottom-0"></span>
           <span className="w-1/2 drop-shadow-3xl transition-all duration-300 block border-[#D4EDF9] absolute h-[20%] rounded-br-lg border-r-2 border-b-2 right-0 bottom-0"></span>
         </button>
+        {/* Submit Button Ended  */}
       </form>
     </>
   );

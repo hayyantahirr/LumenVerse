@@ -57,9 +57,9 @@ const BlogDetail = () => {
             <h3 className="mt-10 opacity-40 italic text-yellow-400">
               Article :
             </h3>
-            <h3 className=" mb-3 text-xl w-[90%] mx-auto opacity-70 text-slate-50">
+            <article className=" mb-3 text-xl w-[90%] mx-auto opacity-70 text-slate-50">
               {blog?.Article}
-            </h3>
+            </article>
           </div>
           {/* Article ended */}
           {/* Tags started */}
@@ -68,6 +68,7 @@ const BlogDetail = () => {
             <h4 className="w-[90%] mx-auto">{blog?.tags}</h4>
           </div>
           {/* Tags ended */}
+          {/* Add to book Mark Button started  */}
           <button
             onClick={() => {
               if (!isBookmarked) {
@@ -102,6 +103,7 @@ const BlogDetail = () => {
               {isBookmarked ? "Already Bookmarked" : "Add to BookMarks"}
             </span>
           </button>
+          {/* Add to book Mark Button ended  */}
           {/* Go to home button started  */}
           <button
             className="mt-6 bg-white text-center w-40 mx-auto rounded-2xl h-10 relative text-black text-xl font-semibold group cursor-pointer"

@@ -28,7 +28,7 @@ const pages = [
   { label: "Home", path: "/" }, // add your path here e.g. "/"
   { label: "Reviews", path: "#reviews" }, // add your path here e.g. "/blogs"
   { label: "Blogs", path: "/blogs" }, // add your path here e.g. "/add-blog"
-  { label: "Add Blogs", path: "/addblogs" }, // add your path here e.g. "/add-blog"
+  { label: "Create a Blog !", path: "/addblogs" }, // add your path here e.g. "/add-blog"
 ];
 
 function ResponsiveAppBar() {

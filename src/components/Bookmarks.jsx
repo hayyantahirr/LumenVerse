@@ -1,17 +1,16 @@
-import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { removeFromBookMark } from "../config/Redux/bmSlice";
-import { DEFAULT_VERSION } from "redux-persist";
+
 import { useNavigate } from "react-router";
 
 const Bookmarks = ({ isOpen }) => {
   const bookMark = useSelector((state) => state.bookMark);
   const dispatch = useDispatch();
-const navigate = useNavigate();
-function handleClick (id){
-navigate (`/blogs/${id}`)
-isOpen(false)
-}
+  const navigate = useNavigate();
+  function handleClick(id) {
+    navigate(`/blogs/${id}`);
+    isOpen(false);
+  }
 
   return (
     <>
@@ -35,12 +34,18 @@ isOpen(false)
             <div
               key={item.id}
               className="flex justify-between items-center mb-5  pb-2"
-
             >
-              <p className="w-[90%] text-l hover:underline cursor-pointer" onClick={()=>{handleClick(item.id)}}>{item.title}</p>
+              <p
+                className="w-[90%] text-l hover:underline cursor-pointer"
+                onClick={() => {
+                  handleClick(item.id);
+                }}
+              >
+                {item.title}
+              </p>
               <button
                 onClick={() => dispatch(removeFromBookMark(item.id))}
-                className="rounded-full mr-2"
+                className="rounded-full mr-2 cursor-pointer"
               >
                 <img src="/Images/delete.svg" alt="" className="w-[25px]" />
               </button>
