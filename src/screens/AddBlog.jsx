@@ -9,12 +9,18 @@ const AddBlog = () => {
   const article = useRef();
   const tags = useRef();
   const [user, setUser] = useState(null);
+  // Title validation states
   const [titleValid, setTitleValid] = useState(null); // null = untouched, true = valid, false = invalid
-  const [subTextValid, setSubTextValid] = useState(null); // null = untouched, true = valid, false = invalid
   const [charCount, setCharCount] = useState(0);
-  const [subtextCharCount, setSubtextCharCount] = useState(0);
   const maxCharsForTitle = 45;
+  // Subtext validation states
+  const [subTextValid, setSubTextValid] = useState(null); // null = untouched, true = valid, false = invalid
+  const [subtextCharCount, setSubtextCharCount] = useState(0);
   const maxCharsForSubtext = 55;
+  // Article's validation states
+  const [articleValid, setArticleValid] = useState(null); // null = untouched, true = valid, false = invalid
+  const [articleCharCount, setArticleCharCount] = useState(0);
+  const maxCharsForArticle = 1100;
   // Validation logics
   // Title Validation logic
   const handleTitleChange = (e) => {
@@ -121,6 +127,59 @@ const AddBlog = () => {
     }
   };
 
+  // Article Validation logic
+  const handleArticleChange = (e) => {
+    let value = e.target.value;
+
+    // Count only non-space characters
+    const charCountWithoutSpaces = value.replace(/\s/g, "").length;
+
+    if (charCountWithoutSpaces <= maxCharsForSubtext) {
+      setArticleCharCount(charCountWithoutSpaces);
+      setArticleValid(charCountWithoutSpaces >= 450); // or whatever your min length
+      article.current.value = value;
+    } else {
+      // Prevent extra input if over the limit
+      e.target.value = article.current.value;
+    }
+
+    // Remove spaces to count only actual characters
+    let lettersOnly = value.replace(/\s+/g, "");
+    let length = lettersOnly.length;
+
+    // If exceeds max → cut it
+    if (length > maxCharsForArticle) {
+      // cut extra chars but keep spaces untouched
+      let trimmed = lettersOnly.slice(0, maxCharsForArticle);
+      // rebuild value with spaces but limited
+      let newValue = "";
+      let count = 0;
+      for (let char of value) {
+        if (char !== " ") {
+          if (count < maxCharsForArticle) {
+            newValue += char;
+            count++;
+          }
+        } else {
+          newValue += char; // spaces always kept
+        }
+      }
+      value = newValue;
+      e.target.value = newValue;
+      lettersOnly = trimmed;
+      length = lettersOnly.length;
+    }
+
+    // set states
+    setArticleCharCount(length);
+
+    if (length >= 450) {
+      setArticleValid(true);
+    } else {
+      setArticleValid(false);
+    }
+  };
+
   // Get User Details
 
   useEffect(() => {
@@ -181,7 +240,7 @@ const AddBlog = () => {
             className="block opacity-60 text-sm font-bold mb-2 text-gray-700"
             htmlFor="title-input"
           >
-            Title
+            Title <span className="text-red-500">*</span>
           </label>
 
           {/* Wrap input + counter in relative container */}
@@ -193,6 +252,7 @@ const AddBlog = () => {
               id="title-input"
               ref={title}
               onChange={handleTitleChange}
+              required
             />
 
             {/* Counter inside input */}
@@ -240,7 +300,7 @@ const AddBlog = () => {
             className="block opacity-60 text-sm font-bold mb-2 text-gray-700"
             htmlFor="subtext-input"
           >
-            Subtext
+            Subtext<span className="text-red-500">*</span>
           </label>
 
           {/* Wrap input + counter in relative container */}
@@ -252,6 +312,7 @@ const AddBlog = () => {
               id="subtext-input"
               ref={subtext}
               onChange={handleSubTextChange}
+              required
             />
 
             {/* Counter inside input */}
@@ -293,26 +354,72 @@ const AddBlog = () => {
           {/* title validation ended */}
         </div>
         {/* subtext ended */}
+
         {/* Article started */}
-        <div className="w-[80%]  p-5 bg-gray-300  rounded-lg font-mono">
+
+        <div className="w-[80%] p-5 bg-gray-300 rounded-lg font-mono">
           <label
             className="block text-gray-700 opacity-60 text-sm font-bold mb-2"
             htmlFor="article-input"
           >
-            Article
+            Article <span className="text-red-500">*</span>
           </label>
-          <textarea
-            className="resize-none overflow-hidden text-sm custom-input w-[100%] px-4 py-2 border border-gray-300 rounded-lg shadow-sm transition duration-300 ease-in-out transform focus:-translate-y-1 focus:outline-blue-300 hover:shadow-lg hover:border-blue-300 bg-gray-100"
-            placeholder="Enter text here"
-            type="text"
-            id="article-input"
-            ref={article}
-            onInput={(e) => {
-              e.target.style.height = "100px"; // reset to base height
-              e.target.style.height = e.target.scrollHeight + "px"; // expand as needed
-            }}
-          ></textarea>
+
+          {/* Wrap input + counter in relative container */}
+          <div className="relative w-full">
+            <textarea
+              className="resize-none overflow-hidden text-sm custom-input w-[100%] px-4 py-2 border border-gray-300 rounded-lg shadow-sm transition duration-300 ease-in-out transform focus:-translate-y-1 focus:outline-blue-300 hover:shadow-lg hover:border-blue-300 bg-gray-100"
+              placeholder="Enter text here"
+              type="text"
+              id="article-input"
+              ref={article}
+              onInput={(e) => {
+                e.target.style.height = "100px"; // reset to base height
+                e.target.style.height = e.target.scrollHeight + "px"; // expand as needed
+              }}
+              required
+              onChange={handleArticleChange}
+            ></textarea>
+
+            {/* Counter inside input */}
+            <span
+              className={`absolute right-3 top-1/2 -translate-y-1/2 text-xs ${
+                articleCharCount >= maxCharsForArticle
+                  ? "text-red-500"
+                  : "text-gray-500"
+              }`}
+            >
+              {articleCharCount}/{maxCharsForArticle}
+            </span>
+          </div>
+
+          {/* Title validation started */}
+          {articleValid === false && (
+            <div className="mt-2 flex items-center gap-1">
+              <div className="w-4 fill-rose-500">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M24,12A12,12,0,1,1,12,0,12.013,12.013,0,0,1,24,12ZM13,5H11V15h2Zm0,12H11v2h2Z"></path>
+                </svg>
+              </div>
+              <p className="capitalize font-medium text-rose-500">
+                Too Short To Be A Blog.
+              </p>
+            </div>
+          )}
+
+          {articleValid === true && (
+            <div className="mt-2 flex items-center gap-1">
+              <div className="w-4 fill-lime-500">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="m12,0C5.383,0,0,5.383,0,12s5.383,12,12,12,12-5.383,12-12S18.617,0,12,0Zm-.091,15.419c-.387.387-.896.58-1.407.58s-1.025-.195-1.416-.585l-2.782-2.696,1.393-1.437,2.793,2.707,5.809-5.701,1.404,1.425-5.793,5.707Z"></path>
+                </svg>
+              </div>
+              <p className="capitalize font-medium text-lime-500">Looks good</p>
+            </div>
+          )}
+          {/* title validation ended */}
         </div>
+
         {/* Article ended */}
         {/* Tags Started  */}
         <div className="w-[80%]  p-5 bg-gray-300  rounded-lg font-mono">
@@ -328,6 +435,7 @@ const AddBlog = () => {
             type="text"
             id="tags-input"
             ref={tags}
+            required
           />
         </div>
         {/* Tags Ended */}
