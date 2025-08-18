@@ -10,17 +10,20 @@ const AddBlog = () => {
   const tags = useRef();
   const [user, setUser] = useState(null);
   const [titleValid, setTitleValid] = useState(null); // null = untouched, true = valid, false = invalid
+  const [subTextValid, setSubTextValid] = useState(null); // null = untouched, true = valid, false = invalid
   const [charCount, setCharCount] = useState(0);
-  const maxChars = 45;
-
+  const [subtextCharCount, setSubtextCharCount] = useState(0);
+  const maxCharsForTitle = 45;
+  const maxCharsForSubtext = 55;
   // Validation logics
+  // Title Validation logic
   const handleTitleChange = (e) => {
     let value = e.target.value;
 
     // Count only non-space characters
     const charCountWithoutSpaces = value.replace(/\s/g, "").length;
 
-    if (charCountWithoutSpaces <= maxChars) {
+    if (charCountWithoutSpaces <= maxCharsForTitle) {
       setCharCount(charCountWithoutSpaces);
       setTitleValid(charCountWithoutSpaces >= 10); // or whatever your min length
       title.current.value = value;
@@ -34,15 +37,15 @@ const AddBlog = () => {
     let length = lettersOnly.length;
 
     // If exceeds max → cut it
-    if (length > maxChars) {
+    if (length > maxCharsForTitle) {
       // cut extra chars but keep spaces untouched
-      let trimmed = lettersOnly.slice(0, maxChars);
+      let trimmed = lettersOnly.slice(0, maxCharsForTitle);
       // rebuild value with spaces but limited
       let newValue = "";
       let count = 0;
       for (let char of value) {
         if (char !== " ") {
-          if (count < maxChars) {
+          if (count < maxCharsForTitle) {
             newValue += char;
             count++;
           }
@@ -63,6 +66,58 @@ const AddBlog = () => {
       setTitleValid(true);
     } else {
       setTitleValid(false);
+    }
+  };
+  // Subtext Validation logic
+  const handleSubTextChange = (e) => {
+    let value = e.target.value;
+
+    // Count only non-space characters
+    const charCountWithoutSpaces = value.replace(/\s/g, "").length;
+
+    if (charCountWithoutSpaces <= maxCharsForSubtext) {
+      setSubtextCharCount(charCountWithoutSpaces);
+      setSubTextValid(charCountWithoutSpaces >= 15); // or whatever your min length
+      subtext.current.value = value;
+    } else {
+      // Prevent extra input if over the limit
+      e.target.value = subtext.current.value;
+    }
+
+    // Remove spaces to count only actual characters
+    let lettersOnly = value.replace(/\s+/g, "");
+    let length = lettersOnly.length;
+
+    // If exceeds max → cut it
+    if (length > maxCharsForSubtext) {
+      // cut extra chars but keep spaces untouched
+      let trimmed = lettersOnly.slice(0, maxCharsForSubtext);
+      // rebuild value with spaces but limited
+      let newValue = "";
+      let count = 0;
+      for (let char of value) {
+        if (char !== " ") {
+          if (count < maxCharsForSubtext) {
+            newValue += char;
+            count++;
+          }
+        } else {
+          newValue += char; // spaces always kept
+        }
+      }
+      value = newValue;
+      e.target.value = newValue;
+      lettersOnly = trimmed;
+      length = lettersOnly.length;
+    }
+
+    // set states
+    setSubtextCharCount(length);
+
+    if (length >= 15) {
+      setSubTextValid(true);
+    } else {
+      setSubTextValid(false);
     }
   };
 
@@ -143,10 +198,10 @@ const AddBlog = () => {
             {/* Counter inside input */}
             <span
               className={`absolute right-3 top-1/2 -translate-y-1/2 text-xs ${
-                charCount >= maxChars ? "text-red-500" : "text-gray-500"
+                charCount >= maxCharsForTitle ? "text-red-500" : "text-gray-500"
               }`}
             >
-              {charCount}/{maxChars}
+              {charCount}/{maxCharsForTitle}
             </span>
           </div>
 
@@ -180,20 +235,62 @@ const AddBlog = () => {
         {/* Title input ended */}
 
         {/* subtext started */}
-        <div className="w-[80%]  p-5 bg-gray-300  rounded-lg font-mono">
+        <div className="w-[80%] p-5 bg-gray-300 rounded-lg font-mono">
           <label
-            className="block text-gray-700 opacity-60 text-sm font-bold mb-2"
-            htmlFor="sub-text-input"
+            className="block opacity-60 text-sm font-bold mb-2 text-gray-700"
+            htmlFor="subtext-input"
           >
-            Sub-Text
+            Subtext
           </label>
-          <input
-            className="text-sm custom-input w-[100%] px-4 py-2 border border-gray-300 rounded-lg shadow-sm transition duration-300 ease-in-out transform focus:-translate-y-1 focus:outline-blue-300 hover:shadow-lg hover:border-blue-300 bg-gray-100"
-            placeholder="Enter your sub-text here"
-            type="text"
-            id="sub-text-input"
-            ref={subtext}
-          />
+
+          {/* Wrap input + counter in relative container */}
+          <div className="relative w-full">
+            <input
+              className="text-sm custom-input w-full px-4 pr-14 py-2 border border-gray-300 rounded-lg shadow-sm transition duration-300 ease-in-out transform focus:-translate-y-1 focus:outline-blue-300 hover:shadow-lg hover:border-blue-300 bg-gray-100"
+              placeholder="Enter your Subtext here"
+              type="text"
+              id="subtext-input"
+              ref={subtext}
+              onChange={handleSubTextChange}
+            />
+
+            {/* Counter inside input */}
+            <span
+              className={`absolute right-3 top-1/2 -translate-y-1/2 text-xs ${
+                subtextCharCount >= maxCharsForSubtext
+                  ? "text-red-500"
+                  : "text-gray-500"
+              }`}
+            >
+              {subtextCharCount}/{maxCharsForSubtext}
+            </span>
+          </div>
+
+          {/* Title validation started */}
+          {subTextValid === false && (
+            <div className="mt-2 flex items-center gap-1">
+              <div className="w-4 fill-rose-500">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M24,12A12,12,0,1,1,12,0,12.013,12.013,0,0,1,24,12ZM13,5H11V15h2Zm0,12H11v2h2Z"></path>
+                </svg>
+              </div>
+              <p className="capitalize font-medium text-rose-500">
+                Sub-Text Too Short.
+              </p>
+            </div>
+          )}
+
+          {subTextValid === true && (
+            <div className="mt-2 flex items-center gap-1">
+              <div className="w-4 fill-lime-500">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="m12,0C5.383,0,0,5.383,0,12s5.383,12,12,12,12-5.383,12-12S18.617,0,12,0Zm-.091,15.419c-.387.387-.896.58-1.407.58s-1.025-.195-1.416-.585l-2.782-2.696,1.393-1.437,2.793,2.707,5.809-5.701,1.404,1.425-5.793,5.707Z"></path>
+                </svg>
+              </div>
+              <p className="capitalize font-medium text-lime-500">Looks good</p>
+            </div>
+          )}
+          {/* title validation ended */}
         </div>
         {/* subtext ended */}
         {/* Article started */}
