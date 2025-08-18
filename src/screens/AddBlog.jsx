@@ -4,23 +4,28 @@ import { auth, db } from "../config/Firebase/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 
 const AddBlog = () => {
-  const title = useRef();
-  const subtext = useRef();
-  const article = useRef();
-  const tags = useRef();
   const [user, setUser] = useState(null);
   // Title validation states
+  const title = useRef();
   const [titleValid, setTitleValid] = useState(null); // null = untouched, true = valid, false = invalid
   const [charCount, setCharCount] = useState(0);
   const maxCharsForTitle = 45;
   // Subtext validation states
+  const subtext = useRef();
   const [subTextValid, setSubTextValid] = useState(null); // null = untouched, true = valid, false = invalid
   const [subtextCharCount, setSubtextCharCount] = useState(0);
   const maxCharsForSubtext = 55;
   // Article's validation states
+  const article = useRef();
   const [articleValid, setArticleValid] = useState(null); // null = untouched, true = valid, false = invalid
   const [articleCharCount, setArticleCharCount] = useState(0);
   const maxCharsForArticle = 1100;
+  // Tags validation states
+  const tags = useRef();
+  const [tagsValid, setTagsValid] = useState(null); // null = untouched, true = valid, false = invalid
+  const [tagsCharCount, setTagsCharCount] = useState(0);
+  const maxCharsForTags = 100;
+
   // Validation logics
   // Title Validation logic
   const handleTitleChange = (e) => {
@@ -180,6 +185,59 @@ const AddBlog = () => {
     }
   };
 
+  // Subtext Validation logic
+  const handleTagsChange = (e) => {
+    let value = e.target.value;
+
+    // Count only non-space characters
+    const charCountWithoutSpaces = value.replace(/\s/g, "").length;
+
+    if (charCountWithoutSpaces <= maxCharsForSubtext) {
+      setTagsCharCount(charCountWithoutSpaces);
+      setTagsValid(charCountWithoutSpaces >= 15); // or whatever your min length
+      tags.current.value = value;
+    } else {
+      // Prevent extra input if over the limit
+      e.target.value = tags.current.value;
+    }
+
+    // Remove spaces to count only actual characters
+    let lettersOnly = value.replace(/\s+/g, "");
+    let length = lettersOnly.length;
+
+    // If exceeds max → cut it
+    if (length > maxCharsForTags) {
+      // cut extra chars but keep spaces untouched
+      let trimmed = lettersOnly.slice(0, maxCharsForTags);
+      // rebuild value with spaces but limited
+      let newValue = "";
+      let count = 0;
+      for (let char of value) {
+        if (char !== " ") {
+          if (count < maxCharsForTags) {
+            newValue += char;
+            count++;
+          }
+        } else {
+          newValue += char; // spaces always kept
+        }
+      }
+      value = newValue;
+      e.target.value = newValue;
+      lettersOnly = trimmed;
+      length = lettersOnly.length;
+    }
+
+    // set states
+    setTagsCharCount(length);
+
+    if (length >= 15) {
+      setTagsValid(true);
+    } else {
+      setTagsValid(false);
+    }
+  };
+
   // Get User Details
 
   useEffect(() => {
@@ -291,9 +349,7 @@ const AddBlog = () => {
           )}
           {/* title validation ended */}
         </div>
-
         {/* Title input ended */}
-
         {/* subtext started */}
         <div className="w-[80%] p-5 bg-gray-300 rounded-lg font-mono">
           <label
@@ -354,9 +410,7 @@ const AddBlog = () => {
           {/* title validation ended */}
         </div>
         {/* subtext ended */}
-
         {/* Article started */}
-
         <div className="w-[80%] p-5 bg-gray-300 rounded-lg font-mono">
           <label
             className="block text-gray-700 opacity-60 text-sm font-bold mb-2"
@@ -419,26 +473,67 @@ const AddBlog = () => {
           )}
           {/* title validation ended */}
         </div>
-
         {/* Article ended */}
-        {/* Tags Started  */}
-        <div className="w-[80%]  p-5 bg-gray-300  rounded-lg font-mono">
+        {/* Tags started */}
+        <div className="w-[80%] p-5 bg-gray-300 rounded-lg font-mono">
           <label
-            className="block text-gray-700 opacity-60 text-sm font-bold mb-2"
-            htmlFor="tags-input"
+            className="block opacity-60 text-sm font-bold mb-2 text-gray-700"
+            htmlFor="subtext-input"
           >
-            Tags
+            Tags ! <span className="text-red-500">*</span>
           </label>
-          <input
-            className="overflow-hidden text-sm custom-input w-[100%] px-4 py-2 border border-gray-300 rounded-lg shadow-sm transition duration-300 ease-in-out transform focus:-translate-y-1 focus:outline-blue-300 hover:shadow-lg hover:border-blue-300 bg-gray-100"
-            placeholder="#EnterYourTagHere!"
-            type="text"
-            id="tags-input"
-            ref={tags}
-            required
-          />
+
+          {/* Wrap input + counter in relative container */}
+          <div className="relative w-full">
+            <input
+              className="text-sm custom-input w-full px-4 pr-14 py-2 border border-gray-300 rounded-lg shadow-sm transition duration-300 ease-in-out transform focus:-translate-y-1 focus:outline-blue-300 hover:shadow-lg hover:border-blue-300 bg-gray-100"
+              placeholder="#EnterYourTagsHere!"
+              type="text"
+              id="subtext-input"
+              ref={tags}
+              onChange={handleTagsChange}
+              required
+            />
+
+            {/* Counter inside input */}
+            <span
+              className={`absolute right-3 top-1/2 -translate-y-1/2 text-xs ${
+                tagsCharCount >= maxCharsForTags
+                  ? "text-red-500"
+                  : "text-gray-500"
+              }`}
+            >
+              {tagsCharCount}/{maxCharsForTags}
+            </span>
+          </div>
+
+          {/* Title validation started */}
+          {tagsValid === false && (
+            <div className="mt-2 flex items-center gap-1">
+              <div className="w-4 fill-rose-500">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M24,12A12,12,0,1,1,12,0,12.013,12.013,0,0,1,24,12ZM13,5H11V15h2Zm0,12H11v2h2Z"></path>
+                </svg>
+              </div>
+              <p className="capitalize font-medium text-rose-500">
+                Not enough Tags 😞.
+              </p>
+            </div>
+          )}
+
+          {tagsValid === true && (
+            <div className="mt-2 flex items-center gap-1">
+              <div className="w-4 fill-lime-500">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="m12,0C5.383,0,0,5.383,0,12s5.383,12,12,12,12-5.383,12-12S18.617,0,12,0Zm-.091,15.419c-.387.387-.896.58-1.407.58s-1.025-.195-1.416-.585l-2.782-2.696,1.393-1.437,2.793,2.707,5.809-5.701,1.404,1.425-5.793,5.707Z"></path>
+                </svg>
+              </div>
+              <p className="capitalize font-medium text-lime-500">Looks good</p>
+            </div>
+          )}
+          {/* title validation ended */}
         </div>
-        {/* Tags Ended */}
+        {/* Tags ended */}
         {/* Show Name Started  */}
         <div className="w-[80%]  p-5 bg-gray-300  rounded-lg font-mono">
           <label className="block text-gray-700 opacity-60 text-sm font-bold mb-2">
