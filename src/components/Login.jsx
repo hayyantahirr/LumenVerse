@@ -3,7 +3,14 @@ import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import { auth, db, googleProvider } from "../config/Firebase/firebase";
 import { GoogleAuthProvider } from "firebase/auth";
-import { addDoc, collection, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
 
 const Login = ({ setModalType }) => {
   // Authentication States and ref
@@ -59,9 +66,9 @@ const Login = ({ setModalType }) => {
           userEmail: user.email,
           profilePic: user.photoURL,
           createdAt: new Date(),
-          id : user.uid
+          id: user.uid,
         });
-        
+
         console.log("New user created!");
       } else {
         console.log("User already exists, skipping creation.");
@@ -70,15 +77,6 @@ const Login = ({ setModalType }) => {
       console.error(error);
     }
   };
-
-  // Save User Details to Firebase
-  async function addUserInfo(e) {
-    e.preventDefault();
-    console.log(title.current.value);
-    console.log(subtext.current.value);
-    console.log(article.current.value);
-    console.log(tags.current.value);
-  }
 
   return (
     <>
@@ -91,15 +89,17 @@ const Login = ({ setModalType }) => {
               </div>
               <div className="mt-5">
                 <label className="font-semibold text-sm text-gray-600 pb-1 block">
-                  E-mail
+                  E-mail <span className="text-red-600">*</span>
                 </label>
                 <input
                   className="border border-black rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full text-black"
                   type="email"
                   ref={email}
+                  required
+                  placeholder="Enter your email address"
                 />
                 <label className="font-semibold text-sm text-gray-600 pb-1 block">
-                  Password
+                  Password <span className="text-red-600">*</span>
                 </label>
                 {/* password show hide work  */}
                 <div className="relative w-full mt-1 mb-5">
@@ -107,6 +107,8 @@ const Login = ({ setModalType }) => {
                     type={showPassword ? "text" : "password"}
                     className="border border-black rounded-lg px-3 py-2 pr-10 w-full text-sm text-black"
                     ref={password}
+                    required
+                    placeholder="Enter your password"
                   />
                   <button
                     type="button"

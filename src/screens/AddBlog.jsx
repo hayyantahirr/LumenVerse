@@ -1,10 +1,20 @@
-import { addDoc, collection, updateDoc } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  getDocs,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 import { useEffect, useRef, useState } from "react";
 import { auth, db } from "../config/Firebase/firebase";
 import { onAuthStateChanged } from "firebase/auth";
+import { useNavigate } from "react-router";
 
 const AddBlog = () => {
   const [user, setUser] = useState(null);
+  const [userId, setUserId] = useState(null);
+  const navigate = useNavigate();
   // Title validation states
   const title = useRef();
   const [titleValid, setTitleValid] = useState(null); // null = untouched, true = valid, false = invalid
@@ -19,7 +29,7 @@ const AddBlog = () => {
   const article = useRef();
   const [articleValid, setArticleValid] = useState(null); // null = untouched, true = valid, false = invalid
   const [articleCharCount, setArticleCharCount] = useState(0);
-  const maxCharsForArticle = 1100;
+  const maxCharsForArticle = 110000;
   // Tags validation states
   const tags = useRef();
   const [tagsValid, setTagsValid] = useState(null); // null = untouched, true = valid, false = invalid
@@ -239,13 +249,12 @@ const AddBlog = () => {
   };
 
   // Get User Details
-
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         const uid = user.uid;
-        setUser(user);
-        console.log(user);
+        setUserId(uid);
+        console.log(uid);
       } else {
         // User is signed out
         // ...
@@ -253,6 +262,20 @@ const AddBlog = () => {
       }
     });
   }, []);
+
+  async function getUser() {
+    const q = query(collection(db, "Users"), where("id", "==", userId));
+    const querySnapshot = await getDocs(q);
+    const alldocs = querySnapshot.docs.map((doc) => doc.data());
+    if (alldocs.length > 0) {
+      setUser(alldocs[0]);
+    }
+  }
+
+  useEffect(() => {
+    getUser();
+  }, []);
+
   // Adding blog to firebase db
 
   async function submitBlog(e) {
@@ -261,14 +284,14 @@ const AddBlog = () => {
     console.log(subtext.current.value);
     console.log(article.current.value);
     console.log(tags.current.value);
-    if (!validateForm()) return; // stop if invalid
+
     const docRef = await addDoc(collection(db, "Blogs"), {
       title: title.current.value,
       subText: subtext.current.value,
       Article: article.current.value,
       tags: tags.current.value,
-      userName: user?.displayName,
-      Uid: user?.uid,
+      userName: user?.displayName ?? user?.userName,
+      Uid: userId,
     });
     console.log("Document written with ID: ", docRef.id);
 
@@ -280,6 +303,7 @@ const AddBlog = () => {
     subtext.current.value = "";
     article.current.value = "";
     tags.current.value = "";
+    navigate("/blogs");
   }
 
   return (
@@ -434,17 +458,6 @@ const AddBlog = () => {
               required
               onChange={handleArticleChange}
             ></textarea>
-
-            {/* Counter inside input */}
-            <span
-              className={`absolute right-3 top-1/2 -translate-y-1/2 text-xs ${
-                articleCharCount >= maxCharsForArticle
-                  ? "text-red-500"
-                  : "text-gray-500"
-              }`}
-            >
-              {articleCharCount}/{maxCharsForArticle}
-            </span>
           </div>
 
           {/* Title validation started */}
@@ -456,7 +469,7 @@ const AddBlog = () => {
                 </svg>
               </div>
               <p className="capitalize font-medium text-rose-500">
-                Too Short To Be A Blog.
+                Too Short To Be A Blog Or an Article.
               </p>
             </div>
           )}
@@ -541,7 +554,7 @@ const AddBlog = () => {
           </label>
 
           <h1 className="opacity-60 overflow-hidden text-sm custom-input w-[100%] px-4 py-2 border border-gray-300 rounded-lg shadow-sm transition duration-300 ease-in-out transform focus:-translate-y-1 focus:outline-blue-300 hover:shadow-lg hover:border-blue-300 bg-gray-100 cursor-not-allowed">
-            {user?.displayName}
+            {user?.displayName ? user?.displayName : user?.userName}
           </h1>
         </div>
         {/* Show Name Ended */}

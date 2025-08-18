@@ -2,7 +2,6 @@ import { createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import { auth, db, googleProvider } from "../config/Firebase/firebase";
-import { ClassNames } from "@emotion/react";
 import {
   addDoc,
   collection,
@@ -21,10 +20,12 @@ const Register = ({ setModalType }) => {
   const navigate = useNavigate();
 
   //   Creating Email/password user
+
   const registerUser = async (e) => {
     e.preventDefault();
 
     try {
+      // ✅ Create user in Firebase Auth
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email.current.value,
@@ -34,22 +35,22 @@ const Register = ({ setModalType }) => {
       const user = userCredential.user;
       console.log("User registered:", user);
 
-      setModalType(null);
-      const docRef = await addDoc(collection(db, "Users"), {
+      // ✅ Save user in Firestore (doc ID = auth UID)
+      await setDoc(doc(db, "Users", user.uid), {
+        id: user.uid,
         userName: name.current.value,
         userEmail: email.current.value,
-
         createdAt: new Date(),
       });
-      console.log("Document written with ID: ", docRef.id);
 
-      await updateDoc(docRef, {
-        id: docRef.id,
-      });
-
+      // Close modal + redirect
+      setModalType(null);
       navigate("/");
     } catch (error) {
       console.error("Error during registration:", error.message);
+
+      // optional: give user feedback
+      // toast.error(error.message);
     }
   };
 
@@ -69,14 +70,14 @@ const Register = ({ setModalType }) => {
 
       if (!userSnap.exists()) {
         // Create new user only once
-       await setDoc(userRef, {
+        await setDoc(userRef, {
           userName: user.displayName,
           userEmail: user.email,
           profilePic: user.photoURL,
           createdAt: new Date(),
-          id : user.uid
+          id: user.uid,
         });
-        
+
         console.log("New user created!");
       } else {
         console.log("User already exists, skipping creation.");
@@ -96,23 +97,29 @@ const Register = ({ setModalType }) => {
               </div>
               <div className="mt-5">
                 <label className="font-semibold text-sm text-gray-600 pb-1 block">
-                  Name
+                  Name <span className="text-red-600">*</span>
                 </label>
                 <input
                   className="border border-black rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full text-black"
                   type="text"
                   ref={name}
+                  required
+                  title="Please enter your name"
+                  placeholder="Enter your Name"
                 />
                 <label className="font-semibold text-sm text-gray-600 pb-1 block">
-                  E-mail
+                  E-mail <span className="text-red-600">*</span>
                 </label>
                 <input
                   className="border border-black rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full text-black"
                   type="email"
                   ref={email}
+                  required
+                  title="Please enter your email"
+                  placeholder="Enter your E-mail"
                 />
                 <label className="font-semibold text-sm text-gray-600 pb-1 block">
-                  Password
+                  Password <span className="text-red-600">*</span>
                 </label>
                 {/* password show hide work  */}
                 <div className="relative w-full mt-1 mb-5">
@@ -120,6 +127,9 @@ const Register = ({ setModalType }) => {
                     type={showPassword ? "text" : "password"}
                     className="border border-black rounded-lg px-3 py-2 pr-10 w-full text-sm text-black"
                     ref={password}
+                    required
+                    title="Please enter your password"
+                    placeholder="Enter your Password"
                   />
                   <button
                     type="button"

@@ -21,7 +21,7 @@ const Home = () => {
 
   function handleClick() {
     if (user) {
-      navigate("");
+      navigate("/blogs");
     } else {
       console.log("Please Login First");
       document.getElementById("navbar-login-btn")?.click();
@@ -30,7 +30,7 @@ const Home = () => {
   return (
     <>
       {/* Main hero section */}
-      <section className="bg-[#001229] w-[80%] mx-auto z-[-1] mt-5">
+      <section className="bg-[#001229] w-[80%] mx-auto z-[-1] mt-15">
         <div className="grid max-w-screen-xl px-4 py-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12">
           <div className="mr-auto place-self-center lg:col-span-7">
             <h1 className="max-w-2xl mb-4 text-4xl font-extrabold tracking-tight leading-none md:text-5xl xl:text-6xl text-slate-50">

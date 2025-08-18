@@ -34,7 +34,7 @@ const Profile = () => {
     : "N/A";
 
   return (
-    <div className="text-white w-[80%] mx-auto">
+    <div className="text-white w-[80%] mx-auto mt-20  ">
       <h1 className="text-2xl mt-8">My Profile</h1>
       <div>
         <img
