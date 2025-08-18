@@ -24,7 +24,7 @@ const Footer = () => {
           <Stack alignItems="center" spacing={1}>
             <Box
               component="img"
-              src="/public/Images/icon.svg" // Logo
+              src="/Images/icon.svg" // Logo
               alt="Logo"
               sx={{ width: 50, height: 50 }}
             />
