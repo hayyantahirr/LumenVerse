@@ -3,10 +3,20 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { auth } from "../config/Firebase/firebase";
 import BookMark from "../components/BookMark";
+import useAnimateOnScroll from "../hooks/animation";
 
 const Home = () => {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
+  // animation states
+  // Hero section (big entry → fade in left, slow)
+  const heroRef = useAnimateOnScroll("animate__fadeInLeft animate__slower");
+
+  // Section 1 (image + text → fade in up, slow)
+  const section1Ref = useAnimateOnScroll("animate__fadeInUp animate__slower");
+
+  // Section 2 (reviews → zoom in, slower for premium feel)
+  const section2Ref = useAnimateOnScroll("animate__zoomIn animate__slower");
 
   // Firebase functions
   useEffect(() => {
@@ -30,7 +40,10 @@ const Home = () => {
   return (
     <>
       {/* Main hero section */}
-      <section className="bg-[#001229] w-[80%] mx-auto z-[-1] mt-15">
+      <section
+        ref={heroRef}
+        className="bg-[#001229] w-[80%] mx-auto z-[-1] mt-15  mb-15"
+      >
         <div className="grid max-w-screen-xl px-4 py-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12">
           <div className="mr-auto place-self-center lg:col-span-7">
             <h1 className="max-w-2xl mb-4 text-4xl font-extrabold tracking-tight leading-none md:text-5xl xl:text-6xl text-slate-50">
@@ -66,7 +79,7 @@ const Home = () => {
         </div>
       </section>
       {/* Section 1 Start */}
-      <section className="bg-[#001229] w-[80%] mx-auto">
+      <section ref={section1Ref} className="bg-[#001229] w-[80%] mx-auto">
         <div className="container px-6 py-10 mx-auto">
           <div className="lg:-mx-6 lg:flex lg:items-center">
             <img
@@ -111,7 +124,11 @@ const Home = () => {
       {user && <BookMark />}
 
       {/* Section 2 Started  */}
-      <section className="bg-[#001229] w-[80%] mx-auto" id="reviews">
+      <section
+        ref={section2Ref}
+        className="bg-[#001229] w-[80%] mx-auto"
+        id="reviews"
+      >
         <div className="container px-6 py-10 mx-auto">
           <div className="mt-6 md:flex md:items-center md:justify-between">
             <div>

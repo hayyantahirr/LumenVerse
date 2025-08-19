@@ -28,7 +28,7 @@ const BookMark = ({}) => {
       <button
         title="Bookmarks"
         onClick={() => setIsOpen(true)}
-        className=" fixed bottom-10 right-10 cursor-pointer bg-[#083D77] px-5 py-5 rounded-full text-white tracking-wider shadow-xl animate-bounce hover:animate-none active:animate-none z-10"
+        className=" fixed bottom-10 right-10 cursor-pointer bg-[#083D77] px-5 py-5 rounded-full text-white tracking-wider shadow-xl  hover:animate-none active:animate-none z-10"
       >
         <svg
           viewBox="0 -0.5 25 25"
