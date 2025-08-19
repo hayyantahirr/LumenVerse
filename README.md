@@ -1,4 +1,7 @@
-🌌 LumenVerse
+🌌 <p align="center">
+<img src="/public/Images/icon.svg" alt="LumenVerse Logo" width="200"/>LumenVerse
+
+</p>
 
 A modern blogging platform built with Vite + React. Designed to let people read, relax, and share personal experiences with the world.
 
@@ -46,12 +49,13 @@ Material UI for sleek, accessible components.
 
 Home – Discover and read blogs.
 
-Profile – Manage your details & authored blogs.
+Profile – User Details of the logged in user.
 
 Add Blog – Create and publish your blog.
 
-Blog – Full view of an individual blog post.
+Blog – All The Available.
 
+DetailedBlog View - Full view of an individual blog post
 🛠️ Tech Stack
 Tech Purpose
 ⚡ Vite + React Frontend framework & bundler
@@ -60,7 +64,9 @@ Tech Purpose
 🔐 Firebase Auth User authentication
 🗄️ Firestore Real-time NoSQL database
 🔄 Redux State management
+
 🚀 Getting Started
+
 1️⃣ Clone the Repo
 git clone https://github.com/yourusername/lumenverse.git
 cd lumenverse
@@ -88,8 +94,6 @@ VITE_APP_ID=appid
 4️⃣ Run the Project
 npm run dev
 
-🖼️ Logos of Tech Used
-
 <!-- Replace the links with official logos if needed -->
 
 🌍 About LumenVerse
@@ -104,14 +108,6 @@ LumenVerse is more than just a blogging site:
 
 🤝 Contributing
 
-Want to improve LumenVerse? Contributions are welcome!
 
-Fork the repo
-
-Create a feature branch
-
-Submit a PR
-
-📜 License
 
 This project is licensed under the MIT License.
