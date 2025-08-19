@@ -1,6 +1,8 @@
 import {
   addDoc,
   collection,
+  doc,
+  getDoc,
   getDocs,
   query,
   updateDoc,
@@ -14,7 +16,13 @@ import { useNavigate } from "react-router";
 const AddBlog = () => {
   const [user, setUser] = useState(null);
   const [userId, setUserId] = useState(null);
+  const [userData, setUserData] = useState(null);
+
   const navigate = useNavigate();
+  // Popup States for form validation
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupMessage, setPopupMessage] = useState("");
+
   // Title validation states
   const title = useRef();
   const [titleValid, setTitleValid] = useState(null); // null = untouched, true = valid, false = invalid
@@ -264,22 +272,40 @@ const AddBlog = () => {
   }, []);
 
   async function getUser() {
+    // First get from Firestore Users collection
     const q = query(collection(db, "Users"), where("id", "==", userId));
     const querySnapshot = await getDocs(q);
     const alldocs = querySnapshot.docs.map((doc) => doc.data());
+
     if (alldocs.length > 0) {
-      setUser(alldocs[0]);
+      const docRef = doc(db, "Users", userId);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        setUserData({ ...alldocs[0], ...docSnap.data() });
+      } else {
+        setUserData(alldocs[0]);
+      }
     }
   }
 
   useEffect(() => {
-    getUser();
-  }, []);
+    if (userId) {
+      getUser();
+    }
+  }, [userId]);
 
   // Adding blog to firebase db
 
   async function submitBlog(e) {
     e.preventDefault();
+
+    if (!titleValid || !subTextValid || !articleValid || !tagsValid) {
+      setPopupMessage("Please fix all errors before submitting!");
+      setShowPopup(true);
+      return;
+    }
+
     console.log(title.current.value);
     console.log(subtext.current.value);
     console.log(article.current.value);
@@ -290,7 +316,7 @@ const AddBlog = () => {
       subText: subtext.current.value,
       Article: article.current.value,
       tags: tags.current.value,
-      userName: user?.displayName ?? user?.userName,
+      userName: userData?.displayName ?? userData?.userName,
       Uid: userId,
     });
     console.log("Document written with ID: ", docRef.id);
@@ -554,11 +580,13 @@ const AddBlog = () => {
           </label>
 
           <h1 className="opacity-60 overflow-hidden text-sm custom-input w-[100%] px-4 py-2 border border-gray-300 rounded-lg shadow-sm transition duration-300 ease-in-out transform focus:-translate-y-1 focus:outline-blue-300 hover:shadow-lg hover:border-blue-300 bg-gray-100 cursor-not-allowed">
-            {user?.displayName ? user?.displayName : user?.userName}
+            {userData?.displayName ?? userData?.userName}
           </h1>
         </div>
+
         {/* Show Name Ended */}
         {/* Submit Button Started  */}
+
         <button
           type="submit"
           className="relative cursor-pointer py-4 px-8 text-center font-barlow inline-flex justify-center text-base uppercase text-white rounded-lg border-solid transition-transform duration-300 ease-in-out group outline-offset-4 focus:outline focus:outline-2 focus:outline-white focus:outline-offset-4 overflow-hidden mt-3"
@@ -572,8 +600,23 @@ const AddBlog = () => {
           <span className="w-1/2 drop-shadow-3xl transition-all duration-300 block border-[#D4EDF9] absolute h-[60%] group-hover:h-[90%] rounded-bl-lg border-l-2 border-b-2 left-0 bottom-0"></span>
           <span className="w-1/2 drop-shadow-3xl transition-all duration-300 block border-[#D4EDF9] absolute h-[20%] rounded-br-lg border-r-2 border-b-2 right-0 bottom-0"></span>
         </button>
+
         {/* Submit Button Ended  */}
       </form>
+      {showPopup && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white rounded-2xl shadow-lg p-6 w-80 text-center">
+            <h2 className="text-lg font-semibold mb-4">⚠️ Form Error</h2>
+            <p className="text-gray-700 mb-4">{popupMessage}</p>
+            <button
+              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+              onClick={() => setShowPopup(false)}
+            >
+              Okay
+            </button>
+          </div>
+        </div>
+      )}
     </>
   );
 };
