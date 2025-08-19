@@ -1,5 +1,5 @@
  <p align="center">
-<img src="/public/Images/icon.svg" alt="LumenVerse Logo" width="50"/>LumenVerse
+<img src="/public/Images/icon.svg" alt="LumenVerse Logo" width="18" />LumenVerse
 
 </p>
 
