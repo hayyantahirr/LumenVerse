@@ -11,7 +11,7 @@ A modern blogging platform built with Vite + React. Designed to let people read,
 
 🔗 Live Demo
 
-👉 LumenVerse Live URL
+👉 : https://lumen-verse.vercel.app/
 
 ⚡ Features
 
