@@ -1,9 +1,7 @@
  <p align="center">
-<<<<<<< HEAD
-<img src="/public/Images/icon.svg" alt="LumenVerse Logo" width="200 "/>LumenVerse
-=======
+
 <img src="/public/Images/icon.svg" alt="LumenVerse Logo" width="18" />LumenVerse
->>>>>>> 7f22d23d9cc34206838ae251deec3dca6a144f74
+
 
 </p>
 
