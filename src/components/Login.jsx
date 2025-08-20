@@ -2,21 +2,14 @@ import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import { auth, db, googleProvider } from "../config/Firebase/firebase";
-import { GoogleAuthProvider } from "firebase/auth";
-import {
-  addDoc,
-  collection,
-  doc,
-  getDoc,
-  setDoc,
-  updateDoc,
-} from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 
 const Login = ({ setModalType }) => {
   // Authentication States and ref
   const email = useRef();
   const password = useRef();
   const [googleUser, setGoogleUser] = useState(null);
+  const [error, setError] = useState("");
   //   Navigation
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
@@ -36,13 +29,14 @@ const Login = ({ setModalType }) => {
         console.log(user);
         console.log("user Signed In Successfully");
         navigate("/");
+        setModalType(null);
       })
       .catch((error) => {
         const errorMessage = error.message;
         console.log(errorMessage);
+        setError("Invalid Credentials");
       });
     // closing modale
-    setModalType(null);
   };
 
   //   Sign in with Google
@@ -160,8 +154,9 @@ const Login = ({ setModalType }) => {
                     )}
                   </button>
                 </div>
+                {error && <p className="text-red-600">{error}</p>}
               </div>
-             
+
               <div className="mt-5">
                 <button
                   className=" cursor-pointer py-2 px-4 bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 focus:ring-offset-blue-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg"
