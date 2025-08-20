@@ -147,7 +147,7 @@ function ResponsiveAppBar() {
         zIndex: "1",
       }}
     >
-      <div className="w-[80%] mx-auto">
+      <div className="w-full md:w-4/5 mx-auto">
         <Container maxWidth="xl">
           <Toolbar disableGutters>
             {/* Normal Screen Logo and title  */}

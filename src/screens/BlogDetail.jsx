@@ -37,7 +37,7 @@ const BlogDetail = () => {
       ) : (
         // 👇 Your actual data
 
-        <div className="w-[76%] text-white mx-auto flex flex-col justify-center mt-15 ">
+        <div className="w-full md:w-4/5 text-white mx-auto flex flex-col justify-center mt-15 ">
           {/* heading and sub Heading started */}
           <div className="">
             <h1 className="text-3xl font-bold mt-10 mb-3 border-b-2 pb-5 border-gray-700">

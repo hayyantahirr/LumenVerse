@@ -336,7 +336,7 @@ const AddBlog = () => {
     <>
       <form
         action=""
-        className=" flex flex-col gap-3 w-[80%]  mx-auto justify-center items-center mt-15"
+        className=" flex flex-col gap-3 w-full md:w-4/5  mx-auto justify-center items-center mt-15"
         onSubmit={submitBlog}
       >
         <h1 className="text-3xl font-bold text-[#facc15] w-[80%] mx-auto mt-5 mb-2 opacity-55">
