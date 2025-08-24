@@ -64,8 +64,10 @@ const Login = ({ setModalType }) => {
         });
 
         console.log("New user created!");
+        navigate("/");
       } else {
         console.log("User already exists, skipping creation.");
+        navigate("/");
       }
     } catch (error) {
       console.error(error);
